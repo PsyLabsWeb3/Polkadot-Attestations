@@ -44,6 +44,8 @@ pub use sp_runtime::{Perbill, Permill};
 /// Import the template pallet.
 pub use pallet_template;
 
+pub use pallet_attestations;
+
 pub use pallet_utility;
 
 /// An index to a block.
@@ -253,6 +255,11 @@ impl pallet_template::Config for Runtime {
 	type WeightInfo = pallet_template::weights::SubstrateWeight<Runtime>;
 }
 
+impl pallet_attestations::Config for Runtime {
+	type RuntimeEvent = RuntimeEvent;
+	type WeightInfo = pallet_attestations::weights::SubstrateWeight<Runtime>;
+}
+
 impl pallet_utility::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
 	type RuntimeCall = RuntimeCall;
@@ -303,6 +310,9 @@ mod runtime {
 	pub type TemplateModule = pallet_template;
 
 	#[runtime::pallet_index(8)]
+	pub type Attestations = pallet_attestations;
+
+	#[runtime::pallet_index(9)]
 	pub type Utility = pallet_utility;
 }
 
@@ -354,6 +364,7 @@ mod benches {
 		[pallet_timestamp, Timestamp]
 		[pallet_sudo, Sudo]
 		[pallet_template, TemplateModule]
+		[pallet_attestations, Attestations]
 		[pallet_utility, Utility]
 	);
 }

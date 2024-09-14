@@ -7,11 +7,13 @@ homepage = "https://substrate.io"
 
 [workspace]
 members = [
-    "node",
+    "node", "pallets/pallet-attestations",
     "pallets/template",
-    "runtime",
+    "pallets/pallet-attestations",
+    "runtime", "pallets/pallet-attestations",
 ]
 resolver = "2"
+
 [profile.release]
 panic = "unwind"
 
