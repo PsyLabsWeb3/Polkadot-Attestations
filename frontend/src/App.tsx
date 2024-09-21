@@ -1,34 +1,56 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import  { useEffect, useState } from 'react'
 import './App.css'
 
+//POLKADOT API
+import { ApiPromise, WsProvider } from '@polkadot/api';
+import Home from './components/pages/Home';
+import { Box, Container, Flex } from '@chakra-ui/react';
+
 function App() {
-  const [count, setCount] = useState(0)
+
+const [api, setApi] = useState<any>(null);
+
+const setupApi = async () => {
+    const wsProvider = new WsProvider('ws://127.0.0.1:9944');
+    const api = await ApiPromise.create({ provider: wsProvider });
+    setApi(api);
+
+    // Get the chain & node information information via rpc calls
+    const [chain, nodeName, nodeVersion] = await Promise.all([
+      api.rpc.system.chain(),
+      api.rpc.system.name(),
+      api.rpc.system.version()
+    ]);
+
+    console.log(`You are connected to chain ${chain} using ${nodeName} v${nodeVersion}`);
+
+   
+}
+
+useEffect(() => {
+  setupApi();
+}
+, []);
+
+useEffect(() => {
+  if(api) {
+    console.log('PolkAttest is connected');
+    console.log(api);
+
+    const getBlock = async () => {
+      const block = await api.query.timestamp.now();
+      console.log('Block:', block.toPrimitive());
+    }
+
+    getBlock();
+  }
+
+  }), [api];
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <Flex w="100%" h="100%">    
+    <Home />
+    </Flex>
   )
 }
 
