@@ -1,6 +1,9 @@
 import { Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom"; // Importamos useNavigate
 
 function DataSection() {
+  const navigate = useNavigate(); // Hook para redirigir
+
   return (
     <Flex
       w="100%"
@@ -49,19 +52,24 @@ function DataSection() {
         gap="2rem"
         flexWrap="wrap"
       >
+        {/* Botón Make Attestation */}
         <Button
           bg="pink.500"
           color="white"
           size="lg"
           _hover={{ bg: "pink.600" }}
+          onClick={() => navigate("/attestations")} // Redirige a la página Attestation
         >
           Make Attestation
         </Button>
+
+        {/* Botón Create New Schema */}
         <Button
           bg="pink.500"
           color="white"
           size="lg"
           _hover={{ bg: "pink.600" }}
+          onClick={() => navigate("/createschema")} // Redirige a la página CreateSchema
         >
           Create New Schema
         </Button>

@@ -6,6 +6,7 @@ import { ApiPromise, WsProvider } from "@polkadot/api";
 import Home from "./components/pages/Home"; // Página Home
 import Schemas from "./components/pages/schemas"; // Página Schemas
 import Attestations from "./components/pages/attestations"; // Página Attestations
+import CreateSchema from "./components/pages/createSchema";
 import { ChakraProvider, Flex } from "@chakra-ui/react"; // ChakraProvider importado
 import theme from './theme/theme';  // Importa tu theme personalizado
 
@@ -63,6 +64,7 @@ function App() {
             <Route path="/" element={<Home />} /> {/* Ruta para la página Home */}
             <Route path="/schemas" element={<Schemas />} /> {/* Ruta para la página Schemas */}
             <Route path="/attestations" element={<Attestations />} /> {/* Ruta para la página Attestations */}
+            <Route path="/createSchema" element={<CreateSchema />} /> {/* Ruta para la página createSchema */}
           </Routes>
         </Flex>
       </Router>
