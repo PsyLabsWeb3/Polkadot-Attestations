@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Link, Flex, Button, Select } from "@chakra-ui/react";
+import { Link as RouterLink } from "react-router-dom"; // Importamos el Link de react-router-dom
+import { Link, Flex, Button, Select, Box, Text } from "@chakra-ui/react";
 import { web3Accounts, web3Enable } from "@polkadot/extension-dapp";
 
 const NAME = "PolkAttest";
@@ -30,7 +31,7 @@ function Header() {
     setSelectedAccount(account);
   };
 
-  //SLICE ACCOUNT TO SHOW ONLY LAST 4 DIGITS AND # POINTS
+  // Formatea la cuenta para mostrar solo los últimos 4 dígitos
   const formatAccount = (account: string) => {
     if (account && account.length > 4) {
       return `...${account.slice(-4)}`;
@@ -38,52 +39,53 @@ function Header() {
     return account;
   };
 
-  console.log("Selected Account", selectedAccount);
-
   return (
     <Flex
       as="header"
-      w="100%s"
+      w="100%"
       align="center"
       justify="space-between"
-      wrap="wrap"
       padding="1.5rem"
       bg="white"
-      color="black"
+      boxShadow="md"
     >
-      <Link href="/" fontSize="2xl" fontWeight="bold">
-        PolkAttest
-      </Link>
-      <Link href="/" fontSize="2xl" fontWeight="bold">
-        PolkAttest
-      </Link>
-      {allAccounts.length === 0 ? (
-        <Button onClick={handleConnectWallet}>Connect Wallet</Button>
-      ) : null}
-      {allAccounts.length === 1 && selectedAccount ? (
-        <Button onClick={handleConnectWallet}>
-          {formatAccount(selectedAccount.address)}
-        </Button>
-      ) : (
-        <></>
-      )}
-      {allAccounts.length > 0 && !selectedAccount ? (
-        <>
-          <Select placeholder="Select Account">
+      {/* Sección del Logo */}
+      <Text fontSize="2xl" fontWeight="bold" color="gray.500">
+        Logo
+      </Text>
+
+      {/* Enlaces de navegación */}
+      <Flex align="center" gap="2rem">
+        <Link as={RouterLink} to="/schemas" fontSize="lg" fontWeight="medium" color="gray.500">
+          Schemas
+        </Link>
+        <Link as={RouterLink} to="/attestations" fontSize="lg" fontWeight="medium" color="gray.500">
+          Attestations
+        </Link>
+      </Flex>
+
+      {/* Botón de conectar billetera */}
+      <Flex align="center">
+        {allAccounts.length === 0 ? (
+          <Button onClick={handleConnectWallet} bg="pink.500" color="white" _hover={{ bg: "pink.600" }}>
+            Connect Wallet
+          </Button>
+        ) : null}
+        {allAccounts.length === 1 && selectedAccount ? (
+          <Button onClick={handleConnectWallet} bg="pink.500" color="white" _hover={{ bg: "pink.600" }}>
+            {formatAccount(selectedAccount.address)}
+          </Button>
+        ) : null}
+        {allAccounts.length > 0 && !selectedAccount ? (
+          <Select placeholder="Select Account" onChange={(e) => handleSelectAccount(e.target.value)}>
             {allAccounts.map((account: any) => (
-              <option
-                key={account.address}
-                value={account.address}
-                onClick={() => handleSelectAccount(account)}
-              >
+              <option key={account.address} value={account.address}>
                 {formatAccount(account.address)}
               </option>
             ))}
           </Select>
-        </>
-      ) : (
-        <></>
-      )}
+        ) : null}
+      </Flex>
     </Flex>
   );
 }
