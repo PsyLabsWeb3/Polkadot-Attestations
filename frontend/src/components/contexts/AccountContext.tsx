@@ -1,9 +1,18 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { web3Accounts, web3Enable } from "@polkadot/extension-dapp";
 
+// Define the type for an account object
+interface Account {
+  address: string;
+  meta: {
+    name?: string;
+    source: string;
+  };
+}
+
 // Define the types for the context
 interface WalletContextType {
-  allAccounts: any[];
+  allAccounts: Account[];
   selectedAccount: string | null;
   handleConnectWallet: () => void;
   handleSelectAccount: (event: React.ChangeEvent<HTMLSelectElement>) => void;
@@ -22,8 +31,8 @@ interface WalletProviderProps {
 }
 
 const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
-  const [allAccounts, setAllAccounts] = useState<any>([]);
-  const [selectedAccount, setSelectedAccount] = useState<any>(null);
+  const [allAccounts, setAllAccounts] = useState<Account[]>([]);
+  const [selectedAccount, setSelectedAccount] = useState<string | null>(null);
 
   const handleConnectWallet = async () => {
     const extensions = await web3Enable(NAME);
@@ -41,7 +50,9 @@ const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
   //SELECT ACCOUNT AFTER CONNECTING WALLET
   const handleSelectAccount = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedAddress = event.target.value;
-    const account = allAccounts.find((acc) => acc.address === selectedAddress);
+    const account = allAccounts.find(
+      (acc: Account) => acc.address === selectedAddress
+    );
 
     if (!account) {
       throw new Error("Account not found");

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link, Flex, Button, Select, Text } from "@chakra-ui/react";
 import { useWallet } from "../../contexts/AccountContext";
 
