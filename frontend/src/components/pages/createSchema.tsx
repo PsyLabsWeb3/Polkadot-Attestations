@@ -10,11 +10,41 @@ import {
   Switch,
   Text,
 } from "@chakra-ui/react";
-import { useState } from "react";
+
 import Header from "../templates/Header/Header"; // Ajusta la ruta según tu estructura
 import Footer from "../pages/footer"; // Ajusta la ruta según tu estructura
 
+import { useEffect, useState } from "react";
+
+// POLKADOT API
+import { ApiPromise, WsProvider } from "@polkadot/api";
+import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
+import { useWallet } from "../contexts/AccountContext";
+import { web3FromAddress } from "@polkadot/extension-dapp";
+
+// Datos de ejemplo para la creación de una attestacion
+const attestationData = {
+  id: "666",
+  schemaId: "651651",
+  subject: "exampleAttestation",
+  issuer: "BOBxlk4598hf9",
+  data: [
+    {
+      name: "BobExample",
+      dataType: "u32",
+      value: "50040504"
+    },
+    {
+      name: "BOB String",
+      dataType: "STRING",
+      value: "Hola BOB"
+    }
+  ]
+};
+
 function CreateSchema() {
+  const {selectedAccount} = useWallet();
+
   const [schemaFields, setSchemaFields] = useState([
     { fieldName: "", fieldType: "", isArray: false },
   ]); // Campos iniciales
@@ -54,6 +84,81 @@ function CreateSchema() {
     console.log("Schema Created:", schemaData);
     // Aquí iría la llamada para insertar el schema usando tu pallet
   };
+
+  const [api, setApi] = useState<ApiPromise | null>(null);
+
+  const setupApi = async () => {
+    // POLKADOT ASSETS HUB RPC FOR NON LOCAL DEVELOPMENT UNTIL WE HAVE OUR OWN NODE
+  // const wsProvider = new WsProvider(
+  //   "wss://polkadot-asset-hub-rpc.polkadot.io"
+  // );
+    // USE THIS FOR LOCAL DEVELOPMENT WITH THE NODE RUNNING
+    const wsProvider = new WsProvider("ws://127.0.0.1:9944");
+    const api = await ApiPromise.create({ provider: wsProvider });
+    setApi(api);
+
+    // Get the chain & node information information via rpc calls
+    const [chain, nodeName, nodeVersion] = await Promise.all([
+      api.rpc.system.chain(),
+      api.rpc.system.name(),
+      api.rpc.system.version(),
+    ]);
+
+    console.log(
+      `You are connected to chain ${chain} using ${nodeName} v${nodeVersion}`
+    );
+  };
+
+  useEffect(() => {
+    setupApi();
+  }, []);
+
+  useEffect(() => {
+    if (api) {
+      console.log("PolkAttest is connected");
+      console.log(api);
+
+      const getBlock = async () => {
+        const block = await api.query.timestamp.now();
+        console.log("Block:", block.toPrimitive());
+      };
+
+      const getAttestations = async () => {
+        const attestations = await api.query.attestations.attestations();
+        console.log("Attestations:", attestations.toHuman());
+      };
+
+     
+      getAttestations();
+
+      getBlock();
+
+
+    }
+  }, [api]);
+
+
+  const handleInsertAttestation = async () =>{
+
+
+    if (!api){
+      console.log("API not ready")
+      return;
+    }
+
+    if (!selectedAccount){
+      console.log("Account not selected")
+      return;
+    }
+
+    const injector = await web3FromAddress(selectedAccount);
+
+        // Insertamos una nueva attestacion
+        await api?.tx.attestations.insertAttestation(
+          attestationData
+             ).signAndSend(selectedAccount, { signer: injector.signer });
+
+  }
 
   return (
     <Flex
@@ -248,9 +353,9 @@ function CreateSchema() {
               color="white"
               _hover={{ bg: "brand.secondary" }}
               border="none"
-              onClick={handleCreateSchema}
+              onClick={handleInsertAttestation}
             >
-              Create Schema
+              Create Attestation
             </Button>
           </VStack>
         </Box>
