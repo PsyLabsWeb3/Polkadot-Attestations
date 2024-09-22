@@ -52,6 +52,13 @@ function App() {
         console.log("Block:", block.toPrimitive());
       };
 
+      const getAttestations = async () => {
+        const attestations = await api.query.attestations.attestations();
+        console.log("Attestations:", attestations.toHuman());
+      };
+
+      getAttestations();
+
       getBlock();
     }
   }, [api]);
