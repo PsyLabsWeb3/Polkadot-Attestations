@@ -8,13 +8,13 @@ import Schemas from "./components/pages/schemas"; // Página Schemas
 import Attestations from "./components/pages/attestations"; // Página Attestations
 import CreateSchema from "./components/pages/createSchema";
 import { ChakraProvider, Flex } from "@chakra-ui/react"; // ChakraProvider importado
-import theme from './theme/theme';  // Importa tu theme personalizado
+import theme from "./theme/theme"; // Importa tu theme personalizado
 
 // Añadir react-router-dom para gestionar las rutas
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
-  const [api, setApi] = useState<any>(null);
+  const [api, setApi] = useState<ApiPromise | null>(null);
 
   const setupApi = async () => {
     // POLKADOT ASSETS HUB RPC FOR NON LOCAL DEVELOPMENT UNTIL WE HAVE OUR OWN NODE
@@ -57,14 +57,24 @@ function App() {
   }, [api]);
 
   return (
-    <ChakraProvider theme={theme}> {/* Envolvemos el contenido en ChakraProvider */}
-      <Router> {/* Añadimos Router para manejar las rutas */}
+    <ChakraProvider theme={theme}>
+      {" "}
+      {/* Envolvemos el contenido en ChakraProvider */}
+      <Router>
+        {" "}
+        {/* Añadimos Router para manejar las rutas */}
         <Flex w="100%" h="100%">
-          <Routes> {/* Definimos las rutas aquí */}
-            <Route path="/" element={<Home />} /> {/* Ruta para la página Home */}
-            <Route path="/schemas" element={<Schemas />} /> {/* Ruta para la página Schemas */}
-            <Route path="/attestations" element={<Attestations />} /> {/* Ruta para la página Attestations */}
-            <Route path="/createSchema" element={<CreateSchema />} /> {/* Ruta para la página createSchema */}
+          <Routes>
+            {" "}
+            {/* Definimos las rutas aquí */}
+            <Route path="/" element={<Home />} />{" "}
+            {/* Ruta para la página Home */}
+            <Route path="/schemas" element={<Schemas />} />{" "}
+            {/* Ruta para la página Schemas */}
+            <Route path="/attestations" element={<Attestations />} />{" "}
+            {/* Ruta para la página Attestations */}
+            <Route path="/createSchema" element={<CreateSchema />} />{" "}
+            {/* Ruta para la página createSchema */}
           </Routes>
         </Flex>
       </Router>
