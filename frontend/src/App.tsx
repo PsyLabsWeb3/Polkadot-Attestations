@@ -18,11 +18,11 @@ function App() {
 
   const setupApi = async () => {
     // POLKADOT ASSETS HUB RPC FOR NON LOCAL DEVELOPMENT UNTIL WE HAVE OUR OWN NODE
-    const wsProvider = new WsProvider(
-      "wss://polkadot-asset-hub-rpc.polkadot.io"
-    );
+  // const wsProvider = new WsProvider(
+  //   "wss://polkadot-asset-hub-rpc.polkadot.io"
+  // );
     // USE THIS FOR LOCAL DEVELOPMENT WITH THE NODE RUNNING
-    // const wsProvider = new WsProvider("ws://127.0.0.1:9944");
+    const wsProvider = new WsProvider("ws://127.0.0.1:9944");
     const api = await ApiPromise.create({ provider: wsProvider });
     setApi(api);
 
