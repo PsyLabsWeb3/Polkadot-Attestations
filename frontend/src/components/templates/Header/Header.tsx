@@ -1,45 +1,20 @@
 import { useState } from "react";
-import { Link, Flex, Button, Select } from "@chakra-ui/react";
-import { web3Accounts, web3Enable } from "@polkadot/extension-dapp";
+import { Link, Flex, Button, Select, Text } from "@chakra-ui/react";
+import { useWallet } from "../../contexts/AccountContext";
 
-const NAME = "PolkAttest";
+interface Account {
+  address: string;
+  // Add other properties if needed
+}
 
 function Header() {
-  const [allAccounts, setAllAccounts] = useState<any>([]);
-  const [selectedAccount, setSelectedAccount] = useState<any>(null);
-
-  const handleConnectWallet = async () => {
-    const extensions = await web3Enable(NAME);
-
-    if (!extensions) {
-      throw new Error("No wallet installed found");
-    }
-
-    const localAccounts = await web3Accounts();
-    setAllAccounts(localAccounts);
-
-    if (localAccounts.length === 1) {
-      setSelectedAccount(localAccounts[0]);
-      console.log("Selected Account", selectedAccount);
-    }
-
-    console.log(allAccounts);
-  };
-
-  const handleSelectAccount = (account: any) => {
-    setSelectedAccount(account);
-  };
-
-  //SLICE ACCOUNT TO SHOW ONLY LAST 4 DIGITS AND # POINTS
-  const formatAccount = (account: string) => {
-    if (account && account.length > 4) {
-      return `...${account.slice(-4)}`;
-    }
-    return account;
-  };
-
-  console.log("Selected Account", selectedAccount);
-
+  const {
+    allAccounts,
+    selectedAccount,
+    handleConnectWallet,
+    handleSelectAccount,
+    formatAccount,
+  } = useWallet();
   return (
     <Flex
       as="header"
@@ -57,33 +32,30 @@ function Header() {
       <Link href="/" fontSize="2xl" fontWeight="bold">
         PolkAttest
       </Link>
+      <Text>
+        {selectedAccount
+          ? formatAccount(selectedAccount)
+          : "no account found, select account"}
+      </Text>
       {allAccounts.length === 0 ? (
         <Button onClick={handleConnectWallet}>Connect Wallet</Button>
       ) : null}
-      {allAccounts.length === 1 && selectedAccount ? (
-        <Button onClick={handleConnectWallet}>
-          {formatAccount(selectedAccount.address)}
-        </Button>
-      ) : (
-        <></>
-      )}
-      {allAccounts.length > 0 && !selectedAccount ? (
+
+      {allAccounts.length > 0 ? (
         <>
-          <Select placeholder="Select Account">
-            {allAccounts.map((account: any) => (
-              <option
-                key={account.address}
-                value={account.address}
-                onClick={() => handleSelectAccount(account)}
-              >
+          <Select
+            onChange={handleSelectAccount}
+            maxWidth="8rem"
+            placeholder="Select Account"
+          >
+            {allAccounts.map((account: Account) => (
+              <option key={account.address} value={account.address}>
                 {formatAccount(account.address)}
               </option>
             ))}
           </Select>
         </>
-      ) : (
-        <></>
-      )}
+      ) : null}
     </Flex>
   );
 }
