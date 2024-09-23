@@ -42,6 +42,10 @@ function Header() {
         <Link href="/schemas" fontSize="lg" fontWeight="medium" color="gray.500">
           Schemas
         </Link>
+        <Link href="/scan" fontSize="lg" fontWeight="medium" color="gray.500">
+          Scan
+        </Link>
+
       </Flex>
 
       {/* Estado de la cuenta conectada */}
