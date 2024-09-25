@@ -113,6 +113,7 @@ function CreateSchema() {
     setupApi();
   }, []);
 
+//CONNECT TO THE POLKADOT API AND GET THE BLOCK TIMESTAMP & ATTESTATIONS
   useEffect(() => {
     if (api) {
       console.log("PolkAttest is connected");
@@ -138,6 +139,7 @@ function CreateSchema() {
   }, [api]);
 
 
+  //CREATE ATTESTATION
   const handleInsertAttestation = async () =>{
 
 
@@ -157,6 +159,25 @@ function CreateSchema() {
         await api?.tx.attestations.insertAttestation(
           attestationData
              ).signAndSend(selectedAccount, { signer: injector.signer });
+
+  }
+
+  //GET ATTESTATIONS WITH EXTRINSIC CALL
+  const handleGetAttestations = async () => {
+
+    if (!api){
+      console.log("API not ready")
+      return;
+    }
+    if (!selectedAccount){
+      console.log("Account not selected")
+      return;
+    }
+
+    const injector = await web3FromAddress(selectedAccount);
+
+    const attestations = await api.tx.attestations.getAttestations().signAndSend(selectedAccount, { signer: injector.signer });
+    console.log("Attestations:", attestations.toHuman);
 
   }
 
@@ -356,6 +377,17 @@ function CreateSchema() {
               onClick={handleInsertAttestation}
             >
               Create Attestation
+            </Button>
+             {/* Botón para traer attestaciones mediante extrinsic call */}
+             <Button
+              mt="2rem"
+              bg="brand.primary"
+              color="white"
+              _hover={{ bg: "brand.secondary" }}
+              border="none"
+              onClick={handleGetAttestations}
+            >
+              Get Attestations
             </Button>
           </VStack>
         </Box>
