@@ -1,6 +1,6 @@
 //! # Attestations Pallet
 //!
-//! A pallet with attestations functionality to help developers integrate attestations to their proyects.
+//! A pallet with attestations functionality to help developers integrate attestations to their projects.
 
 // We make sure this pallet uses `no_std` for compiling to Wasm.
 #![cfg_attr(not(feature = "std"), no_std)]
@@ -56,20 +56,26 @@ pub mod pallet {
 		type WeightInfo: WeightInfo;
 	}
 
-	/// A storage item for this pallet.
+	/// Storage items for this pallet.
 	///
-	/// In this template, we are declaring a storage item called `Something` that stores a single
-	/// `u32` value. Learn more about runtime storage here: <https://docs.substrate.io/build/runtime-storage/>
-	#[pallet::storage]
-	pub type Something<T> = StorageValue<_, u32>;
+	/// In this pallet, we are declaring two storage items called `Scehmas` and `Attestations`
+	/// to store the corresponding data, and two counters for unique ID management.
 
 	#[pallet::storage]
     #[pallet::getter(fn schema)]
-    pub type Schemas<T> = StorageValue<_, Schema>;
+    pub type Schemas<T: Config> = StorageMap<_, Blake2_128Concat, u32, Schema>;
 
     #[pallet::storage]
     #[pallet::getter(fn attestation)]
-    pub type Attestations<T> = StorageValue<_, Attestation>;
+	pub type Attestations<T: Config> = StorageMap<_, Blake2_128Concat, u32, Attestation>;
+
+	#[pallet::storage]
+	#[pallet::getter(fn next_schema_id)]
+	pub type NextSchemaId<T> = StorageValue<_, u32, ValueQuery>;
+
+	#[pallet::storage]
+	#[pallet::getter(fn next_attestation_id)]
+	pub type NextAttestationId<T> = StorageValue<_, u32, ValueQuery>;
 
 	/// Events that functions in this pallet can emit.
 	///
@@ -82,15 +88,8 @@ pub mod pallet {
 	/// will convert the event type of your pallet into `RuntimeEvent` (declared in the pallet's
 	/// [`Config`] trait) and deposit it using [`frame_system::Pallet::deposit_event`].
 	#[pallet::event]
-	#[pallet::generate_deposit(pub(super) fn deposit_event)]
 	pub enum Event<T: Config> {
-		/// A user has successfully set a new value.
-		SomethingStored {
-			/// The new value set.
-			something: u32,
-			/// The account who set the new value.
-			who: T::AccountId,
-		},
+		
 	}
 
 	/// Errors that can be returned by this pallet.
@@ -103,54 +102,46 @@ pub mod pallet {
 	/// information.
 	#[pallet::error]
 	pub enum Error<T> {
-		/// The value retrieved was `None` as no value was previously set.
-		NoneValue,
-		/// There was an attempt to increment the value in storage over `u32::MAX`.
-		StorageOverflow,
+		/// There was an attempt to insert an attestation with an invalid schema id.
+		SchemaNotFound,
 	}
 
 	/// The pallet's dispatchable functions ([`Call`]s).
 	#[pallet::call]
 	impl<T: Config> Pallet<T> {
-		/// An example dispatchable that takes a single u32 value as a parameter, writes the value
-		/// to storage and emits an event.
-		///
-		/// It checks that the _origin_ for this call is _Signed_ and returns a dispatch
-		/// error if it isn't. Learn more about origins here: <https://docs.substrate.io/build/origins/>
 		#[pallet::call_index(0)]
-		#[pallet::weight(T::WeightInfo::do_something())]
-		pub fn do_something(origin: OriginFor<T>, something: u32) -> DispatchResult {
-			// Check that the extrinsic was signed and get the signer.
-			let who = ensure_signed(origin)?;
-
-			// Update storage.
-			Something::<T>::put(something);
-
-			// Emit an event.
-			Self::deposit_event(Event::SomethingStored { something, who });
-
-			// Return a successful `DispatchResult`
-			Ok(())
-		}
-
-		#[pallet::call_index(1)]
 		#[pallet::weight(T::WeightInfo::insert_schema())]
         pub fn insert_schema(origin: OriginFor<T>, schema: Schema) -> DispatchResult {
             let _who = ensure_signed(origin)?;
 
+			// Check if the counter is already initialized, if not set it to 1
+			if NextSchemaId::<T>::get() == 0 {
+				NextSchemaId::<T>::put(1);
+			}
+
+			// Get the next unique schema ID
+			let schema_id = NextSchemaId::<T>::get();
+
+			// Update the schema with the new ID
+			let mut new_schema = schema;
+			new_schema.id = schema_id;
+
             // Insert or update the schema in the storage map
-            Schemas::<T>::put(schema);
+            Schemas::<T>::insert(schema_id, new_schema);
+
+			// Increment the ID for the next schema
+			NextSchemaId::<T>::put(schema_id + 1);
 
             Ok(())
         }
 
-		#[pallet::call_index(2)]
-        #[pallet::weight(T::WeightInfo::get_schemas())]
-        pub fn get_schemas(origin: OriginFor<T>) -> DispatchResult {
+		#[pallet::call_index(1)]
+        #[pallet::weight(T::WeightInfo::get_schema())]
+        pub fn get_schema(origin: OriginFor<T>, schema_id: u32) -> DispatchResult {
             let _who = ensure_signed(origin)?;
 
             // Retrieve the schema from the storage map
-            if let Some(_schema) = Schemas::<T>::get() {
+            if let Some(_schema) = Schemas::<T>::get(schema_id) {
                 // schemas found
             } else {
                 // schemas not found
@@ -159,24 +150,45 @@ pub mod pallet {
             Ok(())
         }
 
-		#[pallet::call_index(3)]
+		#[pallet::call_index(2)]
         #[pallet::weight(T::WeightInfo::insert_attestation())]
         pub fn insert_attestation(origin: OriginFor<T>, attestation: Attestation) -> DispatchResult {
             let _who = ensure_signed(origin)?;
 
-            // Insert or update the attestation in the storage map
-            Attestations::<T>::put(attestation);
+			// Check if the counter is already initialized, if not set it to 1
+			if NextAttestationId::<T>::get() == 0 {
+				NextAttestationId::<T>::put(1);
+			}
+
+			// Validate that the schemaID exists in the Schemas storage
+			ensure!(
+				Schemas::<T>::contains_key(attestation.schema_id),
+				Error::<T>::SchemaNotFound
+			);
+
+			// Get the next unique attestation ID
+			let attestation_id = NextAttestationId::<T>::get();
+
+			// Update the attestation with the new ID
+			let mut new_attestation = attestation;
+			new_attestation.id = attestation_id;
+
+            // Insert the attestation in the storage map
+            Attestations::<T>::insert(attestation_id, new_attestation);
+
+			// Increment the ID for the next attestation
+			NextAttestationId::<T>::put(attestation_id + 1);
 
             Ok(())
         }
 
-		#[pallet::call_index(4)]
-        #[pallet::weight(T::WeightInfo::get_attestations())]
-        pub fn get_attestations(origin: OriginFor<T>) -> DispatchResult {
+		#[pallet::call_index(3)]
+        #[pallet::weight(T::WeightInfo::get_attestation())]
+        pub fn get_attestation(origin: OriginFor<T>, attestation_id: u32) -> DispatchResult {
             let _who = ensure_signed(origin)?;
 
             // Retrieve the attestation from the storage map
-            if let Some(_attestation) = Attestations::<T>::get() {
+            if let Some(_attestation) = Attestations::<T>::get(attestation_id) {
                 // attestations found
             } else {
                 // attestations not found
@@ -184,38 +196,5 @@ pub mod pallet {
 
             Ok(())
         }
-
-		/// An example dispatchable that may throw a custom error.
-		///
-		/// It checks that the caller is a signed origin and reads the current value from the
-		/// `Something` storage item. If a current value exists, it is incremented by 1 and then
-		/// written back to storage.
-		///
-		/// ## Errors
-		///
-		/// The function will return an error under the following conditions:
-		///
-		/// - If no value has been set ([`Error::NoneValue`])
-		/// - If incrementing the value in storage causes an arithmetic overflow
-		///   ([`Error::StorageOverflow`])
-		#[pallet::call_index(5)]
-		#[pallet::weight(T::WeightInfo::cause_error())]
-		pub fn cause_error(origin: OriginFor<T>) -> DispatchResult {
-			let _who = ensure_signed(origin)?;
-
-			// Read a value from storage.
-			match Something::<T>::get() {
-				// Return an error if the value has not been set.
-				None => Err(Error::<T>::NoneValue.into()),
-				Some(old) => {
-					// Increment the value read from storage. This will cause an error in the event
-					// of overflow.
-					let new = old.checked_add(1).ok_or(Error::<T>::StorageOverflow)?;
-					// Update the value in storage with the incremented result.
-					Something::<T>::put(new);
-					Ok(())
-				},
-			}
-		}
 	}
 }
