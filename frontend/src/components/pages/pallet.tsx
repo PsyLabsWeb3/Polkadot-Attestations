@@ -1,23 +1,7 @@
 import { Box, Button, Flex, Heading, Text, Image } from "@chakra-ui/react";
 import legoImage from '../../assets/images/legoimage.png';
-import { useEffect, useState } from 'react';
 
 function Pallet() {
-  // Estado para controlar el tamaño de la imagen en función del scroll
-  const [scale, setScale] = useState(1); // Estado inicial de la escala (1 = tamaño original)
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY;
-      const viewportHeight = window.innerHeight;
-      const scrollFactor = 1 + (scrollPosition / viewportHeight) * 0.5; // Controla la velocidad de escalado
-      setScale(Math.min(scrollFactor, 2)); // Limita el escalado a 2x
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   return (
     <Flex direction="column" w="100%" minH="100vh" bg="gray.50">
       {/* Contenido principal de Pallet */}
@@ -55,7 +39,7 @@ function Pallet() {
           </Box>
         </Box>
 
-        {/* Columna de imagen con efecto de escala al hacer scroll */}
+        {/* Columna de imagen sin efecto de escala */}
         <Box
           w="45%" // Se asegura de que ambas columnas tengan el mismo ancho
           display="flex"
@@ -65,10 +49,7 @@ function Pallet() {
           <Image
             src={legoImage}
             alt="Attestation Pallet Image"
-            style={{
-              transform: `scale(${scale})`, // Aplica el escalado dinámico
-              transition: 'transform 0.1s ease-out', // Suaviza la transición
-            }}
+            // Se eliminó el efecto de escalado y la animación
           />
         </Box>
       </Flex>

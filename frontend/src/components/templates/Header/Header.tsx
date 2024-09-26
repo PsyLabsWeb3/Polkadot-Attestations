@@ -36,6 +36,9 @@ function Header() {
         <Link href="/" fontSize="lg" fontWeight="medium" color="gray.500">
           Home
         </Link>
+        <Link href="/userdashboard" fontSize="lg" fontWeight="medium" color="gray.500">
+          My Dashboard
+        </Link>
         <Link href="/attestations" fontSize="lg" fontWeight="medium" color="gray.500">
           Attestations
         </Link>
