@@ -1,35 +1,46 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+
+import "./App.css";
+
+
+import Home from "./components/pages/Home"; // Página Home
+import Schemas from "./components/pages/schemas"; // Página Schemas
+import Attestations from "./components/pages/attestations"; // Página Attestations
+import CreateSchema from "./components/pages/createSchema";
+import { ChakraProvider, Flex } from "@chakra-ui/react"; // ChakraProvider importado
+import theme from "./theme/theme"; // Importa tu theme personalizado
+
+// Añadir react-router-dom para gestionar las rutas
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+
 
 function App() {
-  const [count, setCount] = useState(0)
+  
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <ChakraProvider theme={theme}>
+      {" "}
+      {/* Envolvemos el contenido en ChakraProvider */}
+      <Router>
+        {" "}
+        {/* Añadimos Router para manejar las rutas */}
+        <Flex w="100%" h="100%">
+          <Routes>
+            {" "}
+            {/* Definimos las rutas aquí */}
+            <Route path="/" element={<Home />} />{" "}
+            {/* Ruta para la página Home */}
+            <Route path="/schemas" element={<Schemas />} />{" "}
+            {/* Ruta para la página Schemas */}
+            <Route path="/attestations" element={<Attestations />} />{" "}
+            {/* Ruta para la página Attestations */}
+            <Route path="/createSchema" element={<CreateSchema />} />{" "}
+            {/* Ruta para la página createSchema */}
+          </Routes>
+        </Flex>
+      </Router>
+    </ChakraProvider>
+  );
 }
 
-export default App
+export default App;
