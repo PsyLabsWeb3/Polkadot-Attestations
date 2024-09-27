@@ -1,5 +1,19 @@
 import { Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom"; // Importamos useNavigate
+import { keyframes } from "@emotion/react"; // Importamos keyframes para la animación
+
+// Animación de gradiente
+const gradientAnimation = keyframes`
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+`;
 
 function DataSection() {
   const navigate = useNavigate(); // Hook para redirigir
@@ -8,7 +22,9 @@ function DataSection() {
     <Flex
       w="100%"
       h="100vh"
-      bg="black"
+      bgGradient="linear(to-r, #000000, #7204ff)"
+      bgSize="200% 200%"
+      animation={`${gradientAnimation} 15s ease infinite`} // Añadimos la animación
       flexDirection="column"
       alignItems="center"
       justifyContent="center"
@@ -46,12 +62,7 @@ function DataSection() {
       </Flex>
 
       {/* Botones */}
-      <Flex
-        justifyContent="center"
-        alignItems="center"
-        gap="2rem"
-        flexWrap="wrap"
-      >
+      <Flex justifyContent="center" alignItems="center" gap="2rem" flexWrap="wrap">
         {/* Botón Make Attestation */}
         <Button
           bg="pink.500"
