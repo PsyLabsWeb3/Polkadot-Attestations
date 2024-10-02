@@ -48,6 +48,8 @@ pub use pallet_attestations;
 
 pub use pallet_utility;
 
+pub use pallet_contracts;
+
 /// An index to a block.
 pub type BlockNumber = u32;
 
@@ -243,6 +245,39 @@ impl pallet_transaction_payment::Config for Runtime {
 	type FeeMultiplierUpdate = ConstFeeMultiplier<FeeMultiplier>;
 }
 
+parameter_types! {
+    pub const TombstoneDeposit: Balance = 16 * MILLICENTS;
+    pub const RentByteFee: Balance = 4 * MILLICENTS;
+    pub const RentDepositOffset: Balance = 1000 * MILLICENTS;
+    pub const SurchargeReward: Balance = 150 * MILLICENTS;
+    pub const MaxDepth: u32 = 5;
+    pub const MaxValueSize: u32 = 16 * 1024;
+    pub const DeletionWeightLimit: Weight = AVERAGE_ON_INITIALIZE_RATIO * BlockWeights::get().max_block;
+    pub const DeletionQueueDepth: u32 = 128;
+}
+
+impl pallet_contracts::Config for Runtime {
+    type Time = Timestamp;
+    type Randomness = RandomnessCollectiveFlip;
+    type Currency = Balances;
+    type Event = RuntimeEvent;
+    type WeightInfo = pallet_contracts::weights::SubstrateWeight<Runtime>;
+    type Call = Call;
+    type CallFilter = frame_support::traits::Everything;
+    type DepositPerItem = ConstU128<EXISTENTIAL_DEPOSIT>;
+    type DepositPerByte = ConstU128<EXISTENTIAL_DEPOSIT>;
+    type RentFraction = pallet_contracts::weights::RentFraction;
+    type TombstoneDeposit = TombstoneDeposit;
+    type StorageSizeOffset = ConstU32<8>;
+    type RentByteFee = RentByteFee;
+    type RentDepositOffset = RentDepositOffset;
+    type SurchargeReward = SurchargeReward;
+    type MaxDepth = MaxDepth;
+    type MaxValueSize = MaxValueSize;
+    type DeletionWeightLimit = DeletionWeightLimit;
+    type DeletionQueueDepth = DeletionQueueDepth;
+}
+
 impl pallet_sudo::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
 	type RuntimeCall = RuntimeCall;
@@ -314,6 +349,9 @@ mod runtime {
 
 	#[runtime::pallet_index(9)]
 	pub type Utility = pallet_utility;
+
+	#[runtime::pallet_index(10)]
+	pub type Contracts = pallet_contracts;
 }
 
 /// The address format for describing accounts.
@@ -366,6 +404,7 @@ mod benches {
 		[pallet_template, TemplateModule]
 		[pallet_attestations, Attestations]
 		[pallet_utility, Utility]
+		[pallet_contracts, Contracts]
 	);
 }
 
