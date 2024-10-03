@@ -3,6 +3,12 @@
 #[cfg(feature = "std")]
 include!(concat!(env!("OUT_DIR"), "/wasm_binary.rs"));
 
+mod contracts_config;
+mod assets_config;
+
+use sp_runtime::Perbill;
+
+
 use pallet_grandpa::AuthorityId as GrandpaId;
 use sp_api::impl_runtime_apis;
 use sp_consensus_aura::sr25519::AuthorityId as AuraId;
@@ -17,6 +23,7 @@ use sp_std::prelude::*;
 #[cfg(feature = "std")]
 use sp_version::NativeVersion;
 use sp_version::RuntimeVersion;
+
 
 use frame_support::genesis_builder_helper::{build_config, create_default_config};
 pub use frame_support::{
@@ -39,7 +46,31 @@ pub use pallet_timestamp::Call as TimestampCall;
 use pallet_transaction_payment::{ConstFeeMultiplier, CurrencyAdapter, Multiplier};
 #[cfg(any(feature = "std", test))]
 pub use sp_runtime::BuildStorage;
-pub use sp_runtime::{Perbill, Permill};
+// pub use sp_runtime::{Perbill, Permill};
+
+// // Import the environmental crate
+// extern crate environmental;
+// use environmental::environmental;
+
+// // Import the thread_local macro
+// #[macro_use]
+// extern crate lazy_static;
+// use std::thread_local;
+
+// // Define the GLOBAL variable
+// thread_local! {
+//     static GLOBAL: u8 = 0;
+// }
+
+// // Ensure the environmental macro is used correctly
+// mod v3 {
+//     environmental::environmental!(instructions_count: u8);
+// }
+
+// mod v4 {
+//     environmental::environmental!(instructions_count: u8);
+// }
+
 
 /// Import the template pallet.
 pub use pallet_template;
@@ -68,6 +99,9 @@ pub type Nonce = u32;
 
 /// A hash of some data used by the chain.
 pub type Hash = sp_core::H256;
+
+
+
 
 /// Opaque types. These are used by the CLI to instantiate machinery that don't need to know
 /// the specifics of the runtime. They can then be made to be agnostic over specific formats
@@ -128,6 +162,8 @@ pub const SLOT_DURATION: u64 = MILLISECS_PER_BLOCK;
 pub const MINUTES: BlockNumber = 60_000 / (MILLISECS_PER_BLOCK as BlockNumber);
 pub const HOURS: BlockNumber = MINUTES * 60;
 pub const DAYS: BlockNumber = HOURS * 24;
+
+
 
 /// The version information used to identify this runtime when compiled natively.
 #[cfg(feature = "std")]
@@ -228,7 +264,7 @@ impl pallet_balances::Config for Runtime {
 	type WeightInfo = pallet_balances::weights::SubstrateWeight<Runtime>;
 	type FreezeIdentifier = ();
 	type MaxFreezes = ();
-	type RuntimeHoldReason = ();
+	type RuntimeHoldReason = pallet_contracts::HoldReason;
 	type RuntimeFreezeReason = ();
 }
 
@@ -245,38 +281,6 @@ impl pallet_transaction_payment::Config for Runtime {
 	type FeeMultiplierUpdate = ConstFeeMultiplier<FeeMultiplier>;
 }
 
-parameter_types! {
-    pub const TombstoneDeposit: Balance = 16 * MILLICENTS;
-    pub const RentByteFee: Balance = 4 * MILLICENTS;
-    pub const RentDepositOffset: Balance = 1000 * MILLICENTS;
-    pub const SurchargeReward: Balance = 150 * MILLICENTS;
-    pub const MaxDepth: u32 = 5;
-    pub const MaxValueSize: u32 = 16 * 1024;
-    pub const DeletionWeightLimit: Weight = AVERAGE_ON_INITIALIZE_RATIO * BlockWeights::get().max_block;
-    pub const DeletionQueueDepth: u32 = 128;
-}
-
-impl pallet_contracts::Config for Runtime {
-    type Time = Timestamp;
-    type Randomness = RandomnessCollectiveFlip;
-    type Currency = Balances;
-    type Event = RuntimeEvent;
-    type WeightInfo = pallet_contracts::weights::SubstrateWeight<Runtime>;
-    type Call = Call;
-    type CallFilter = frame_support::traits::Everything;
-    type DepositPerItem = ConstU128<EXISTENTIAL_DEPOSIT>;
-    type DepositPerByte = ConstU128<EXISTENTIAL_DEPOSIT>;
-    type RentFraction = pallet_contracts::weights::RentFraction;
-    type TombstoneDeposit = TombstoneDeposit;
-    type StorageSizeOffset = ConstU32<8>;
-    type RentByteFee = RentByteFee;
-    type RentDepositOffset = RentDepositOffset;
-    type SurchargeReward = SurchargeReward;
-    type MaxDepth = MaxDepth;
-    type MaxValueSize = MaxValueSize;
-    type DeletionWeightLimit = DeletionWeightLimit;
-    type DeletionQueueDepth = DeletionQueueDepth;
-}
 
 impl pallet_sudo::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
@@ -351,6 +355,9 @@ mod runtime {
 	pub type Utility = pallet_utility;
 
 	#[runtime::pallet_index(10)]
+	pub type Assets = pallet_assets;
+
+	#[runtime::pallet_index(11)]
 	pub type Contracts = pallet_contracts;
 }
 
