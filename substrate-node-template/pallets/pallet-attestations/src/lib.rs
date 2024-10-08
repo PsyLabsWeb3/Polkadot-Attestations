@@ -15,11 +15,6 @@ pub use pallet::*;
 #[cfg(test)]
 mod mock;
 
-// This module contains the unit tests for this pallet.
-// Learn about pallet unit testing here: https://docs.substrate.io/test/unit-testing/
-#[cfg(test)]
-mod tests;
-
 // Every callable function or "dispatchable" a pallet exposes must have weight values that correctly
 // estimate a dispatchable's execution time. The benchmarking module is used to calculate weights
 // for each dispatchable and generates this pallet's weight.rs file. Learn more about benchmarking here: https://docs.substrate.io/test/benchmark/
@@ -44,10 +39,6 @@ pub mod pallet {
 	pub struct Pallet<T>(_);
 
 	/// The pallet's configuration trait.
-	///
-	/// All our types and constants a pallet depends on must be declared here.
-	/// These types are defined generically and made concrete when the pallet is declared in the
-	/// `runtime/src/lib.rs` file of your chain.
 	#[pallet::config]
 	pub trait Config: frame_system::Config {
 		/// The overarching runtime event type.
@@ -56,40 +47,38 @@ pub mod pallet {
 		type WeightInfo: WeightInfo;
 	}
 
-	/// Storage items for this pallet.
-	///
-	/// In this pallet, we are declaring two storage items called `Scehmas` and `Attestations`
-	/// to store the corresponding data, and two counters for unique ID management.
+	// Storage item for this pallet.
+	//
+	// In this pallet, we are declaring two storage items called `Scehmas` and `Attestations`
+	// to store the corresponding data, and two counters for unique ID management.
 
+	/// Schema storage for the pallet.
 	#[pallet::storage]
     #[pallet::getter(fn schema)]
     pub type Schemas<T: Config> = StorageMap<_, Blake2_128Concat, u32, Schema>;
 
+	/// Attestation storage for the pallet.
     #[pallet::storage]
     #[pallet::getter(fn attestation)]
 	pub type Attestations<T: Config> = StorageMap<_, Blake2_128Concat, u32, Attestation>;
 
+	/// Schema ID counter for unique ID management.
 	#[pallet::storage]
 	#[pallet::getter(fn next_schema_id)]
 	pub type NextSchemaId<T> = StorageValue<_, u32, ValueQuery>;
 
+	/// Attestation ID counter for unique ID management.
 	#[pallet::storage]
 	#[pallet::getter(fn next_attestation_id)]
 	pub type NextAttestationId<T> = StorageValue<_, u32, ValueQuery>;
 
 	/// Events that functions in this pallet can emit.
-	///
-	/// Events are a simple means of indicating to the outside world (such as dApps, chain explorers
-	/// or other users) that some notable update in the runtime has occurred. In a FRAME pallet, the
-	/// documentation for each event field and its parameters is added to a node's metadata so it
-	/// can be used by external interfaces or tools.
-	///
-	///	The `generate_deposit` macro generates a function on `Pallet` called `deposit_event` which
-	/// will convert the event type of your pallet into `RuntimeEvent` (declared in the pallet's
-	/// [`Config`] trait) and deposit it using [`frame_system::Pallet::deposit_event`].
 	#[pallet::event]
 	pub enum Event<T: Config> {
-		
+		/// Event emitted when a schema is inserted. The parameters are the ID of the schema and the account that created it.
+		SchemaInserted { schema_id: u32, who: T::AccountId },
+		/// Event emitted when an attestation is inserted. The parameters are the ID of the attestation and the account that created it.
+		AttestationInserted { attestation_id: u32, who: T::AccountId },
 	}
 
 	/// Errors that can be returned by this pallet.
@@ -109,6 +98,7 @@ pub mod pallet {
 	/// The pallet's dispatchable functions ([`Call`]s).
 	#[pallet::call]
 	impl<T: Config> Pallet<T> {
+		/// Function which inserts a schema into the pallet storage.
 		#[pallet::call_index(0)]
 		#[pallet::weight(T::WeightInfo::insert_schema())]
         pub fn insert_schema(origin: OriginFor<T>, schema: Schema) -> DispatchResult {
@@ -132,25 +122,16 @@ pub mod pallet {
 			// Increment the ID for the next schema
 			NextSchemaId::<T>::put(schema_id + 1);
 
+			// Emit the SchemaInserted event
+			Self::deposit_event(Event::SchemaInserted { schema_id, who });
+
             Ok(())
         }
 
+		/// Function which inserts an attestation into the pallet storage.
+		///
+		/// Requires at least one schema to be previously inserted.
 		#[pallet::call_index(1)]
-        #[pallet::weight(T::WeightInfo::get_schema())]
-        pub fn get_schema(origin: OriginFor<T>, schema_id: u32) -> DispatchResult {
-            let _who = ensure_signed(origin)?;
-
-            // Retrieve the schema from the storage map
-            if let Some(_schema) = Schemas::<T>::get(schema_id) {
-                // schemas found
-            } else {
-                // schemas not found
-            }
-
-            Ok(())
-        }
-
-		#[pallet::call_index(2)]
         #[pallet::weight(T::WeightInfo::insert_attestation())]
         pub fn insert_attestation(origin: OriginFor<T>, attestation: Attestation) -> DispatchResult {
             let _who = ensure_signed(origin)?;
@@ -179,20 +160,8 @@ pub mod pallet {
 			// Increment the ID for the next attestation
 			NextAttestationId::<T>::put(attestation_id + 1);
 
-            Ok(())
-        }
-
-		#[pallet::call_index(3)]
-        #[pallet::weight(T::WeightInfo::get_attestation())]
-        pub fn get_attestation(origin: OriginFor<T>, attestation_id: u32) -> DispatchResult {
-            let _who = ensure_signed(origin)?;
-
-            // Retrieve the attestation from the storage map
-            if let Some(_attestation) = Attestations::<T>::get(attestation_id) {
-                // attestations found
-            } else {
-                // attestations not found
-            }
+			// Emit the AttestationInserted event
+			Self::deposit_event(Event::AttestationInserted { attestation_id, who });
 
             Ok(())
         }
