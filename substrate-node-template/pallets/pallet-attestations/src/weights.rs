@@ -35,9 +35,7 @@ use core::marker::PhantomData;
 /// Weight functions needed for pallet_template.
 pub trait WeightInfo {
 	fn insert_schema() -> Weight;
-	fn get_schema() -> Weight;
 	fn insert_attestation() -> Weight;
-	fn get_attestation() -> Weight;
 }
 
 /// Weights for pallet_template using the Substrate node and recommended hardware.
@@ -52,25 +50,7 @@ impl<T: frame_system::Config> WeightInfo for SubstrateWeight<T> {
 			.saturating_add(T::DbWeight::get().writes(1_u64))
 	}
 
-	fn get_schema() -> Weight {
-		// Proof Size summary in bytes:
-		//  Measured:  `0`
-		//  Estimated: `0`
-		// Minimum execution time: 8_000_000 picoseconds.
-		Weight::from_parts(9_000_000, 0)
-			.saturating_add(T::DbWeight::get().writes(1_u64))
-	}
-
 	fn insert_attestation() -> Weight {
-		// Proof Size summary in bytes:
-		//  Measured:  `0`
-		//  Estimated: `0`
-		// Minimum execution time: 8_000_000 picoseconds.
-		Weight::from_parts(9_000_000, 0)
-			.saturating_add(T::DbWeight::get().writes(1_u64))
-	}
-
-	fn get_attestation() -> Weight {
 		// Proof Size summary in bytes:
 		//  Measured:  `0`
 		//  Estimated: `0`
@@ -91,25 +71,7 @@ impl WeightInfo for () {
 			.saturating_add(RocksDbWeight::get().writes(1_u64))
 	}
 
-	fn get_schema() -> Weight {
-		// Proof Size summary in bytes:
-		//  Measured:  `0`
-		//  Estimated: `0`
-		// Minimum execution time: 8_000_000 picoseconds.
-		Weight::from_parts(9_000_000, 0)
-			.saturating_add(RocksDbWeight::get().writes(1_u64))
-	}
-
 	fn insert_attestation() -> Weight {
-		// Proof Size summary in bytes:
-		//  Measured:  `0`
-		//  Estimated: `0`
-		// Minimum execution time: 8_000_000 picoseconds.
-		Weight::from_parts(9_000_000, 0)
-			.saturating_add(RocksDbWeight::get().writes(1_u64))
-	}
-
-	fn get_attestation() -> Weight {
 		// Proof Size summary in bytes:
 		//  Measured:  `0`
 		//  Estimated: `0`
