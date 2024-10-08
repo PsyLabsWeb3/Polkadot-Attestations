@@ -74,6 +74,7 @@ pub mod pallet {
 
 	/// Events that functions in this pallet can emit.
 	#[pallet::event]
+	#[pallet::generate_deposit(pub(super) fn deposit_event)]
 	pub enum Event<T: Config> {
 		/// Event emitted when a schema is inserted. The parameters are the ID of the schema and the account that created it.
 		SchemaInserted { schema_id: u32, who: T::AccountId },
@@ -102,7 +103,7 @@ pub mod pallet {
 		#[pallet::call_index(0)]
 		#[pallet::weight(T::WeightInfo::insert_schema())]
         pub fn insert_schema(origin: OriginFor<T>, schema: Schema) -> DispatchResult {
-            let _who = ensure_signed(origin)?;
+            let who = ensure_signed(origin)?;
 
 			// Check if the counter is already initialized, if not set it to 1
 			if NextSchemaId::<T>::get() == 0 {
@@ -134,7 +135,7 @@ pub mod pallet {
 		#[pallet::call_index(1)]
         #[pallet::weight(T::WeightInfo::insert_attestation())]
         pub fn insert_attestation(origin: OriginFor<T>, attestation: Attestation) -> DispatchResult {
-            let _who = ensure_signed(origin)?;
+            let who = ensure_signed(origin)?;
 
 			// Check if the counter is already initialized, if not set it to 1
 			if NextAttestationId::<T>::get() == 0 {
