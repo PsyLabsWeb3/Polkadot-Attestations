@@ -62,14 +62,19 @@ function DataSection() {
       </Flex>
 
       {/* Botones */}
-      <Flex justifyContent="center" alignItems="center" gap="2rem" flexWrap="wrap">
+      <Flex
+        justifyContent="center"
+        alignItems="center"
+        gap="2rem"
+        flexWrap="wrap"
+      >
         {/* Botón Make Attestation */}
         <Button
           bg="pink.500"
           color="white"
           size="lg"
           _hover={{ bg: "pink.600" }}
-          onClick={() => navigate("/attestations")} // Redirige a la página Attestation
+          onClick={() => navigate("/attest")} // Redirige a la página Attestation
         >
           Make Attestation
         </Button>

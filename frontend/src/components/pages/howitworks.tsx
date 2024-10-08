@@ -11,16 +11,18 @@ function HowItWorks() {
     {
       title: "Create a Schema",
       image: "/path/to/image1.png",
-      description: "Description for creating a schema. You can explain the process here.",
+      description:
+        "Description for creating a schema. You can explain the process here.",
       buttonLabel: "Create New Schema",
       buttonRoute: "/createschema",
     },
     {
       title: "Make an Attestation",
       image: "/path/to/image2.png",
-      description: "Description for making an attestation. You can explain the process here.",
+      description:
+        "Description for making an attestation. You can explain the process here.",
       buttonLabel: "Make Attestation",
-      buttonRoute: "/attestations",
+      buttonRoute: "/attest",
     },
   ];
 
@@ -47,7 +49,13 @@ function HowItWorks() {
       </Heading>
 
       {/* Contenedor dividido en 3 secciones */}
-      <Flex w="100%" maxW="1200px" h="60vh" justifyContent="space-between" alignItems="center">
+      <Flex
+        w="100%"
+        maxW="1200px"
+        h="60vh"
+        justifyContent="space-between"
+        alignItems="center"
+      >
         {/* Flecha izquierda */}
         <IconButton
           aria-label="Previous slide"

@@ -1,21 +1,35 @@
-import {
-  Box,
-  Heading,
-  Flex,
-  VStack,
-  Button,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Heading, Flex, VStack, Button } from "@chakra-ui/react";
 
-import { useNavigate } from "react-router-dom"; // Import the useNavigate hook for navigation
-import Header from "../templates/Header/Header"; // Adjust the path as needed
-import Footer from "../pages/footer"; // Adjust the path as needed
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Header from "../templates/Header/Header";
+import Footer from "../pages/footer";
+import { useEffect, useState } from "react";
+import { getSchemas } from "../../mocks/getSchemas";
+
+export type Field = {
+  name: string;
+  type: string;
+  isArray: boolean;
+  description: string;
+  format?: string;
+};
+
+export type Schema = {
+  id: string;
+  name: string;
+  fields: Field[];
+  resolverAddress: string;
+  isRevocable: boolean;
+};
 
 function Attestations() {
-  const [schemasList, setSchemasList] = useState(["Schema 1", "Schema 2", "Schema 3"]); // Example schemas
+  const [schemasList, setSchemasList] = useState<Schema[]>([]);
 
-  const navigate = useNavigate(); // Initialize the navigate function
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    setSchemasList(getSchemas());
+  }, []);
 
   return (
     <Flex
@@ -53,9 +67,9 @@ function Attestations() {
 
           {/* List of schemas */}
           <VStack spacing={4} w="100%">
-            {schemasList.map((schema, index) => (
+            {schemasList.map((schema: any) => (
               <Box
-                key={index}
+                key={schema.id}
                 w="100%"
                 p={4}
                 bg="white"
@@ -65,8 +79,9 @@ function Attestations() {
                 textAlign="center"
                 color="brand.black"
                 _hover={{ bg: "brand.grayLight", cursor: "pointer" }}
+                onClick={() => navigate(`/attest/${schema.id}`)}
               >
-                {schema}
+                {schema.name}
               </Box>
             ))}
           </VStack>

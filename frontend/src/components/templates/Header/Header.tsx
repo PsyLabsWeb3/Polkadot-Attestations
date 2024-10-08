@@ -36,19 +36,28 @@ function Header() {
         <Link href="/" fontSize="lg" fontWeight="medium" color="gray.500">
           Home
         </Link>
-        <Link href="/userdashboard" fontSize="lg" fontWeight="medium" color="gray.500">
+        <Link
+          href="/userdashboard"
+          fontSize="lg"
+          fontWeight="medium"
+          color="gray.500"
+        >
           My Dashboard
         </Link>
-        <Link href="/attestations" fontSize="lg" fontWeight="medium" color="gray.500">
+        <Link href="/attest" fontSize="lg" fontWeight="medium" color="gray.500">
           Attestations
         </Link>
-        <Link href="/schemas" fontSize="lg" fontWeight="medium" color="gray.500">
+        <Link
+          href="/schemas"
+          fontSize="lg"
+          fontWeight="medium"
+          color="gray.500"
+        >
           Schemas
         </Link>
         <Link href="/scan" fontSize="lg" fontWeight="medium" color="gray.500">
           Scan
         </Link>
-
       </Flex>
 
       {/* Estado de la cuenta conectada */}
