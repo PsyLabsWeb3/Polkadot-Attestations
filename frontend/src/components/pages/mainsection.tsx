@@ -1,4 +1,5 @@
-import { Box, Flex, Heading, keyframes } from "@chakra-ui/react";
+import { Box, Flex, Heading } from "@chakra-ui/react";
+import { keyframes } from "@emotion/react";
 
 // Definir los keyframes de la animación
 const gradientAnimation = keyframes`
@@ -12,7 +13,7 @@ function MainSection() {
     <Flex
       flexDirection="column"
       w="100%"
-      h="calc(100vh - 4rem)"  // Ajusta según la altura del Header
+      h="calc(100vh - 4rem)" // Ajusta según la altura del Header
       bgGradient="linear(to-r, #7204ff, #FF2670)" // El gradiente inicial
       backgroundSize="200% 200%" // Para permitir el movimiento del gradiente
       animation={`${gradientAnimation} 10s ease infinite`} // Aplicar la animación

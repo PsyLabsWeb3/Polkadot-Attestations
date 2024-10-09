@@ -18,9 +18,9 @@ import { useEffect, useState } from "react";
 
 // POLKADOT API
 import { ApiPromise, WsProvider } from "@polkadot/api";
-import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 import { useWallet } from "../contexts/AccountContext";
 import { web3FromAddress } from "@polkadot/extension-dapp";
+import { Signer } from "@polkadot/api/types";
 
 // Datos de ejemplo para la creación de una attestacion
 const attestationData = {
@@ -32,18 +32,18 @@ const attestationData = {
     {
       name: "BobExample",
       dataType: "u32",
-      value: "50040504"
+      value: "50040504",
     },
     {
       name: "BOB String",
       dataType: "STRING",
-      value: "Hola BOB"
-    }
-  ]
+      value: "Hola BOB",
+    },
+  ],
 };
 
 function CreateSchema() {
-  const {selectedAccount} = useWallet();
+  const { selectedAccount } = useWallet();
 
   const [schemaFields, setSchemaFields] = useState([
     { fieldName: "", fieldType: "", isArray: false },
@@ -67,7 +67,11 @@ function CreateSchema() {
   };
 
   // Manejador para actualizar los campos del schema
-  const handleFieldChange = (index, field, value) => {
+  const handleFieldChange = (
+    index: number,
+    field: string,
+    value: string | boolean
+  ) => {
     const updatedFields = schemaFields.map((fieldItem, i) =>
       i === index ? { ...fieldItem, [field]: value } : fieldItem
     );
@@ -75,23 +79,23 @@ function CreateSchema() {
   };
 
   // Manejador para crear el schema (simulación)
-  const handleCreateSchema = () => {
-    const schemaData = {
-      fields: schemaFields,
-      resolver: resolverAddress,
-      revocable: isRevocable,
-    };
-    console.log("Schema Created:", schemaData);
-    // Aquí iría la llamada para insertar el schema usando tu pallet
-  };
+  // const handleCreateSchema = () => {
+  //   const schemaData = {
+  //     fields: schemaFields,
+  //     resolver: resolverAddress,
+  //     revocable: isRevocable,
+  //   };
+  //   console.log("Schema Created:", schemaData);
+  //   // Aquí iría la llamada para insertar el schema usando tu pallet
+  // };
 
   const [api, setApi] = useState<ApiPromise | null>(null);
 
   const setupApi = async () => {
     // POLKADOT ASSETS HUB RPC FOR NON LOCAL DEVELOPMENT UNTIL WE HAVE OUR OWN NODE
-  // const wsProvider = new WsProvider(
-  //   "wss://polkadot-asset-hub-rpc.polkadot.io"
-  // );
+    // const wsProvider = new WsProvider(
+    //   "wss://polkadot-asset-hub-rpc.polkadot.io"
+    // );
     // USE THIS FOR LOCAL DEVELOPMENT WITH THE NODE RUNNING
     const wsProvider = new WsProvider("ws://127.0.0.1:9944");
     const api = await ApiPromise.create({ provider: wsProvider });
@@ -113,7 +117,7 @@ function CreateSchema() {
     setupApi();
   }, []);
 
-//CONNECT TO THE POLKADOT API AND GET THE BLOCK TIMESTAMP & ATTESTATIONS
+  //CONNECT TO THE POLKADOT API AND GET THE BLOCK TIMESTAMP & ATTESTATIONS
   useEffect(() => {
     if (api) {
       console.log("PolkAttest is connected");
@@ -129,57 +133,52 @@ function CreateSchema() {
         console.log("Attestations:", attestations.toHuman());
       };
 
-     
       getAttestations();
 
       getBlock();
-
-
     }
   }, [api]);
 
-
   //CREATE ATTESTATION
-  const handleInsertAttestation = async () =>{
-
-
-    if (!api){
-      console.log("API not ready")
+  const handleInsertAttestation = async () => {
+    if (!api) {
+      console.log("API not ready");
       return;
     }
 
-    if (!selectedAccount){
-      console.log("Account not selected")
+    if (!selectedAccount) {
+      console.log("Account not selected");
       return;
     }
 
     const injector = await web3FromAddress(selectedAccount);
 
-        // Insertamos una nueva attestacion
-        await api?.tx.attestations.insertAttestation(
-          attestationData
-             ).signAndSend(selectedAccount, { signer: injector.signer });
+    // Insertamos una nueva attestacion
+    const signer = injector.signer as Signer;
 
-  }
+    await api.tx.attestations
+      .insertAttestation(attestationData)
+      .signAndSend(selectedAccount, { signer });
+  };
 
   //GET ATTESTATIONS WITH EXTRINSIC CALL
   const handleGetAttestations = async () => {
-
-    if (!api){
-      console.log("API not ready")
+    if (!api) {
+      console.log("API not ready");
       return;
     }
-    if (!selectedAccount){
-      console.log("Account not selected")
+    if (!selectedAccount) {
+      console.log("Account not selected");
       return;
     }
 
     const injector = await web3FromAddress(selectedAccount);
-
-    const attestations = await api.tx.attestations.getAttestations().signAndSend(selectedAccount, { signer: injector.signer });
+    const signer = injector.signer as Signer;
+    const attestations = await api.tx.attestations
+      .getAttestations()
+      .signAndSend(selectedAccount, { signer });
     console.log("Attestations:", attestations.toHuman);
-
-  }
+  };
 
   return (
     <Flex
@@ -378,8 +377,8 @@ function CreateSchema() {
             >
               Create Attestation
             </Button>
-             {/* Botón para traer attestaciones mediante extrinsic call */}
-             <Button
+            {/* Botón para traer attestaciones mediante extrinsic call */}
+            <Button
               mt="2rem"
               bg="brand.primary"
               color="white"
