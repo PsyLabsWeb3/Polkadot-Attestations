@@ -37,7 +37,7 @@ function App() {
             {/* Ruta para la página makeAttestation */}
             <Route path="/attest/:id" element={<MakeAttestation />} />{" "}
             {/* Ruta para la página MakeAttestation */}
-            <Route path="/userdashboard" element={<UserDashboard />} />{" "}
+            <Route path="/user-dashboard" element={<UserDashboard />} />{" "}
             {/* Ruta para la página MakeAttestation */}
           </Routes>
         </Flex>
