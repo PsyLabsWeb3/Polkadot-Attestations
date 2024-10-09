@@ -1,4 +1,5 @@
 import { Box, Flex, Heading, keyframes } from "@chakra-ui/react";
+import Spline from "@splinetool/react-spline";
 
 // Definir los keyframes de la animación
 const gradientAnimation = keyframes`
@@ -12,7 +13,7 @@ function MainSection() {
     <Flex
       flexDirection="column"
       w="100%"
-      h="calc(100vh - 4rem)"  // Ajusta según la altura del Header
+      h="calc(100vh - 4rem)" // Ajusta según la altura del Header
       bgGradient="linear(to-r, #7204ff, #FF2670)" // El gradiente inicial
       backgroundSize="200% 200%" // Para permitir el movimiento del gradiente
       animation={`${gradientAnimation} 10s ease infinite`} // Aplicar la animación
@@ -20,6 +21,10 @@ function MainSection() {
       alignItems="center"
     >
       <Box textAlign="center">
+        <div>
+          <Spline scene="https://prod.spline.design/PBQQBw8bfXDhBo7w/scene.splinecode" />
+        </div>
+
         <Heading fontSize="4rem" color="white">
           PolkAttest Chain
         </Heading>
