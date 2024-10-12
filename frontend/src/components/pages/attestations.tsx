@@ -1,21 +1,18 @@
-import {
-  Box,
-  Heading,
-  Flex,
-  VStack,
-  Button,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Heading, Flex, VStack, Button, Text } from "@chakra-ui/react";
 
-import { useNavigate } from "react-router-dom"; // Import the useNavigate hook for navigation
-import Header from "../templates/Header/Header"; // Adjust the path as needed
-import Footer from "../pages/footer"; // Adjust the path as needed
+import { useNavigate } from "react-router-dom";
+import Header from "../templates/Header/Header";
+import Footer from "../pages/footer";
 import { useState } from "react";
 
 function Attestations() {
-  const [schemasList, setSchemasList] = useState(["Schema 1", "Schema 2", "Schema 3"]); // Example schemas
+  const [schemasList, setSchemasList] = useState([
+    "Schema 1",
+    "Schema 2",
+    "Schema 3",
+  ]); // Example list of schemas
 
-  const navigate = useNavigate(); // Initialize the navigate function
+  const navigate = useNavigate(); // Initialize the navigate function for route navigation
 
   return (
     <Flex
@@ -25,7 +22,7 @@ function Attestations() {
       bg="brand.background"
       color="brand.black"
     >
-      {/* Header */}
+      {/* Header section */}
       <Box w="100%">
         <Header />
       </Box>
@@ -51,7 +48,7 @@ function Attestations() {
             Choose your schema to attest
           </Heading>
 
-          {/* List of schemas */}
+          {/* Display the list of available schemas */}
           <VStack spacing={4} w="100%">
             {schemasList.map((schema, index) => (
               <Box
@@ -71,7 +68,7 @@ function Attestations() {
             ))}
           </VStack>
 
-          {/* Button to create a new schema */}
+          {/* Button to navigate to create a new schema */}
           <Button
             mt={8}
             bg="brand.primary"
@@ -79,14 +76,14 @@ function Attestations() {
             _hover={{ bg: "brand.secondary" }}
             border="none"
             w={{ base: "100%", md: "300px" }}
-            onClick={() => navigate("/createschema")} // Navigate to /createschema on click
+            onClick={() => navigate("/create-schema")} // Redirect to /create-schema when clicked
           >
             Create a New Schema to Attest
           </Button>
         </Box>
       </Flex>
 
-      {/* Footer */}
+      {/* Footer section */}
       <Box w="100%">
         <Footer />
       </Box>
