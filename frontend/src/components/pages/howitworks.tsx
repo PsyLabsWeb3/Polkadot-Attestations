@@ -1,35 +1,40 @@
 import { Box, Heading, Flex, Text, Button, IconButton } from "@chakra-ui/react";
 import { useState } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
-import { useNavigate } from "react-router-dom"; // Para redirigir
+import { useNavigate } from "react-router-dom";
 
 function HowItWorks() {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const navigate = useNavigate(); // Hook para redirigir
+  const [currentSlide, setCurrentSlide] = useState(0); // State to track the current slide
+  const navigate = useNavigate();
 
+  // Array of slides for the carousel
   const slides = [
     {
       title: "Create a Schema",
       image: "/path/to/image1.png",
-      description: "Description for creating a schema. You can explain the process here.",
+      description:
+        "Description for creating a schema. You can explain the process here.",
       buttonLabel: "Create New Schema",
-      buttonRoute: "/createschema",
+      buttonRoute: "/create-schema",
     },
     {
       title: "Make an Attestation",
       image: "/path/to/image2.png",
-      description: "Description for making an attestation. You can explain the process here.",
+      description:
+        "Description for making an attestation. You can explain the process here.",
       buttonLabel: "Make Attestation",
       buttonRoute: "/attestations",
     },
   ];
 
+  // Function to handle the next slide
   const handleNext = () => {
-    setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
+    setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1)); // Loop back to the first slide after the last
   };
 
+  // Function to handle the previous slide
   const handlePrevious = () => {
-    setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
+    setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1)); // Loop back to the last slide when on the first
   };
 
   return (
@@ -39,16 +44,22 @@ function HowItWorks() {
       minH="100vh"
       alignItems="center"
       justifyContent="center"
-      bg="#000000" // Fondo negro
-      color="#FFFFFF" // Fuentes blancas
+      bg="#000000" // Black background
+      color="#FFFFFF" // White text color
     >
       <Heading as="h2" mb={6}>
         How it Works
       </Heading>
 
-      {/* Contenedor dividido en 3 secciones */}
-      <Flex w="100%" maxW="1200px" h="60vh" justifyContent="space-between" alignItems="center">
-        {/* Flecha izquierda */}
+      {/* Container divided into 3 sections */}
+      <Flex
+        w="100%"
+        maxW="1200px"
+        h="60vh"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        {/* Left arrow */}
         <IconButton
           aria-label="Previous slide"
           icon={<ChevronLeftIcon />}
@@ -56,41 +67,39 @@ function HowItWorks() {
           bg="transparent"
           color="brand.secondary"
           _hover={{ bg: "transparent" }}
-          onClick={handlePrevious}
+          onClick={handlePrevious} // Go to the previous slide
         />
 
-        {/* Sección central más grande */}
+        {/* Central section containing the carousel */}
         <Box flex="2" textAlign="center">
-          {/* Carrusel */}
           <Box textAlign="center" w="100%" p={6}>
-            {/* Espacio para la imagen */}
+            {/* Image placeholder */}
             <Box h="200px" mb={4}>
-              {/* Placeholder de la imagen */}
               <Text>Image Carousel</Text>
             </Box>
 
-            {/* Título del slide */}
+            {/* Slide title */}
             <Heading as="h3" fontSize="xl" mb={4}>
               {slides[currentSlide].title}
             </Heading>
 
-            {/* Descripción del slide */}
+            {/* Slide description */}
             <Text mb={6}>{slides[currentSlide].description}</Text>
 
-            {/* Botón condicional para navegar a las rutas */}
+            {/* Conditional button for navigating to different routes */}
             <Button
               bg="brand.primary"
               color="white"
               _hover={{ bg: "brand.secondary" }}
               border="none"
-              onClick={() => navigate(slides[currentSlide].buttonRoute)}
+              onClick={() => navigate(slides[currentSlide].buttonRoute)} // Navigate to the specified route
             >
               {slides[currentSlide].buttonLabel}
             </Button>
           </Box>
         </Box>
 
-        {/* Flecha derecha */}
+        {/* Right arrow */}
         <IconButton
           aria-label="Next slide"
           icon={<ChevronRightIcon />}
@@ -98,7 +107,7 @@ function HowItWorks() {
           bg="transparent"
           color="brand.secondary"
           _hover={{ bg: "transparent" }}
-          onClick={handleNext}
+          onClick={handleNext} // Go to the next slide
         />
       </Flex>
     </Flex>

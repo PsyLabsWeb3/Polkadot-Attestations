@@ -4,7 +4,6 @@ import { useLocation } from "react-router-dom";
 
 interface Account {
   address: string;
-  // Add other properties if needed
 }
 
 function Header() {
@@ -32,7 +31,7 @@ function Header() {
       color="black"
       position="relative"
     >
-      {/* Logo PolkAttest */}
+      {/* Logo PolkAttest - redirects to homepage */}
       <Link
         href="/"
         fontSize="2xl"
@@ -42,8 +41,9 @@ function Header() {
         PolkAttest
       </Link>
 
+      {/* Navigation links */}
       <Flex gap="2rem" justify="center" flex="1" position="relative">
-        {/* Condicionamos el enlace "Home" para que no aparezca en el path "/" */}
+        {/* Home link should not appear on the home page */}
         {currentPath !== "/" && (
           <Link
             href="/"
@@ -67,7 +67,7 @@ function Header() {
         </Link>
 
         <Link
-          href="/schemas"
+          href="/create-schema"
           fontSize="lg"
           fontWeight="medium"
           color="gray.500"
@@ -75,6 +75,7 @@ function Header() {
         >
           Create Schema
         </Link>
+
         <Link
           href="/attestations"
           fontSize="lg"
@@ -84,6 +85,7 @@ function Header() {
         >
           Attest
         </Link>
+
         <Link
           href="/scan"
           fontSize="lg"
@@ -95,7 +97,7 @@ function Header() {
         </Link>
       </Flex>
 
-      {/* Estado de la cuenta conectada */}
+      {/* Display wallet connection status */}
       <Text
         position="absolute"
         right="230px"
@@ -110,12 +112,14 @@ function Header() {
         )}
       </Text>
 
+      {/* Show "Connect Wallet" button if no accounts are connected */}
       {allAccounts.length === 0 ? (
         <Button width={buttonAndSelectWidth} onClick={handleConnectWallet}>
           Connect Wallet
         </Button>
       ) : null}
 
+      {/* Dropdown for selecting wallet account */}
       {allAccounts.length > 0 ? (
         <Select
           onChange={handleSelectAccount}
@@ -130,9 +134,9 @@ function Header() {
             transition: "0.4s",
           }}
         >
-          {allAccounts.map((account: Account) => (
+          {allAccounts.map((account: Account, index: number) => (
             <option
-              key={account.address}
+              key={index}
               value={account.address}
               style={{
                 color: "black",
