@@ -1,11 +1,11 @@
 import { Box, Heading, Flex, VStack, Button, Input } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
-import Header from "../templates/Header/Header"; // Ensure the path is correct
-import Footer from "../pages/footer"; // Ensure the path is correct
+import { useNavigate } from "react-router-dom";
+import Header from "../templates/Header/Header";
+import Footer from "../pages/footer";
 import { useState } from "react";
 
 function Schemas() {
-  const [schemaName, setSchemaName] = useState(""); // For capturing the schema name
+  const [schemaName, setSchemaName] = useState(""); // State to capture the schema name input
 
   // Hook for redirection
   const navigate = useNavigate();
@@ -36,9 +36,9 @@ function Schemas() {
           {/* Schema Search Form */}
           <VStack spacing={4}>
             <Input
-              placeholder="Search By ID"
-              value={schemaName}
-              onChange={(e) => setSchemaName(e.target.value)}
+              placeholder="Search By ID" // Placeholder for schema search by ID
+              value={schemaName} // Controlled input for schema name
+              onChange={(e) => setSchemaName(e.target.value)} // Update state on input change
               w="100%"
               bg="white"
               borderColor="gray.700"
@@ -46,13 +46,14 @@ function Schemas() {
               _placeholder={{ color: "gray.500" }}
               _focus={{ borderColor: "brand.primary" }}
             />
+            {/* Button to navigate to create a new schema */}
             <Button
               bg="brand.primary"
               color="white"
               _hover={{ bg: "brand.secondary" }}
               border="none"
               w="100%"
-              onClick={() => navigate("/createschema")}
+              onClick={() => navigate("/create-schema")}
             >
               Create New Schema
             </Button>
