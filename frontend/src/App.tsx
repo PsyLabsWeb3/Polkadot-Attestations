@@ -1,13 +1,11 @@
-
 import "./App.css";
-
 
 import Home from "./components/pages/Home"; // Página Home
 import Schemas from "./components/pages/schemas"; // Página Schemas
 import Attestations from "./components/pages/attestations"; // Página Attestations
 import CreateSchema from "./components/pages/createSchema";
 import Scan from "./components/pages/scan";
-import MakeAttestation from "./components/pages/makeattestation"
+import MakeAttestation from "./components/pages/makeattestation";
 import UserDashboard from "./components/pages/userdashboard";
 import { ChakraProvider, Flex } from "@chakra-ui/react"; // ChakraProvider importado
 import theme from "./theme/theme"; // Importa tu theme personalizado
@@ -15,11 +13,7 @@ import theme from "./theme/theme"; // Importa tu theme personalizado
 // Añadir react-router-dom para gestionar las rutas
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-
-
 function App() {
-  
-
   return (
     <ChakraProvider theme={theme}>
       {" "}

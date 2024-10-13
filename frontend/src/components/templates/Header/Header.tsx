@@ -16,6 +16,8 @@ function Header() {
     formatAccount,
   } = useWallet();
 
+  console.log(useWallet());
+
   const location = useLocation();
   const currentPath = location.pathname;
   const buttonAndSelectWidth = "11rem";
@@ -124,6 +126,7 @@ function Header() {
           placeholder="Select Account"
           size="lg"
           variant="filled"
+          value={selectedAccount || ""}
           _hover={{
             color: "black",
             boxShadow: "0px 3px 5px rgba(0, 0, 0, 0.2)",
