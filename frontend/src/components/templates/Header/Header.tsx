@@ -128,6 +128,7 @@ function Header() {
           placeholder="Select Account"
           size="lg"
           variant="filled"
+          value={selectedAccount || ""}
           _hover={{
             color: "black",
             boxShadow: "0px 3px 5px rgba(0, 0, 0, 0.2)",
