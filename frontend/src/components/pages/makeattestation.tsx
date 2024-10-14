@@ -2,6 +2,7 @@ import { Box, Heading, Flex, VStack, Button, Input, Text } from "@chakra-ui/reac
 import Header from "../templates/Header/Header";
 import Footer from "../pages/footer";
 import { useState } from "react";
+import { ApiPromise, WsProvider } from "@polkadot/api";
 
 function MakeAttestation() {
   // Example of schema for demonstration purposes

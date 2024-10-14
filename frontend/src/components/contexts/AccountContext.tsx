@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 import { web3Accounts, web3Enable } from "@polkadot/extension-dapp";
 
 // Define the type for an account object
@@ -31,8 +37,14 @@ interface WalletProviderProps {
 }
 
 const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
-  const [allAccounts, setAllAccounts] = useState<Account[]>([]);
-  const [selectedAccount, setSelectedAccount] = useState<string | null>(null);
+  const storedAccounts = sessionStorage.getItem("allAccounts");
+  const [allAccounts, setAllAccounts] = useState<Account[]>(
+    storedAccounts ? JSON.parse(storedAccounts) : []
+  );
+
+  const [selectedAccount, setSelectedAccount] = useState<string | null>(
+    sessionStorage.getItem("selectedAccount") || null
+  );
 
   const handleConnectWallet = async () => {
     const extensions = await web3Enable(NAME);
@@ -43,11 +55,9 @@ const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
 
     const localAccounts = await web3Accounts();
     setAllAccounts(localAccounts);
-
-    console.log(allAccounts);
+    sessionStorage.setItem("allAccounts", JSON.stringify(localAccounts));
   };
 
-  //SELECT ACCOUNT AFTER CONNECTING WALLET
   const handleSelectAccount = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedAddress = event.target.value;
     const account = allAccounts.find(
@@ -59,9 +69,15 @@ const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
     }
 
     setSelectedAccount(account.address);
+    sessionStorage.setItem("selectedAccount", account.address);
   };
 
-  //SLICE ACCOUNT TO SHOW ONLY LAST 4 DIGITS AND # POINTS
+  useEffect(() => {
+    if (selectedAccount) {
+      sessionStorage.setItem("selectedAccount", selectedAccount);
+    }
+  }, [selectedAccount]);
+
   const formatAccount = (account: string) => {
     if (account && account.length > 4) {
       return `...${account.slice(-4)}`;
