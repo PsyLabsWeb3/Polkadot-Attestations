@@ -260,6 +260,41 @@ impl pallet_utility::Config for Runtime {
 	type WeightInfo = pallet_utility::weights::SubstrateWeight<Runtime>;
 }
 
+impl pallet_contracts::Config for Runtime {
+    type Time = Timestamp;
+    type Randomness = DummyRandomness<Self>;
+    type Currency = Balances;
+    type RuntimeEvent = RuntimeEvent;
+    type RuntimeCall = RuntimeCall;
+
+    type CallFilter = AllowBalancesCall;
+    type DepositPerItem = DepositPerItem;
+    type DepositPerByte = DepositPerByte;
+    type CallStack = [pallet_contracts::Frame<Self>; 23];
+    type WeightPrice = pallet_transaction_payment::Pallet<Self>;
+    type WeightInfo = pallet_contracts::weights::SubstrateWeight<Self>;
+    type ChainExtension = ();
+    type Schedule = Schedule;
+    type AddressGenerator = pallet_contracts::DefaultAddressGenerator;
+	
+    type MaxCodeLen = ConstU32<{ 256 * 1024 }>;
+    type DefaultDepositLimit = DefaultDepositLimit;
+    type MaxStorageKeyLen = ConstU32<128>;
+    type MaxDebugBufferLen = ConstU32<{ 2 * 1024 * 1024 }>;
+    type UnsafeUnstableInterface = ConstBool<true>;
+    type CodeHashLockupDepositPercent = CodeHashLockupDepositPercent;
+    type MaxDelegateDependencies = MaxDelegateDependencies;
+    type RuntimeHoldReason = RuntimeHoldReason;
+
+    type Environment = ();
+    type Debug = ();
+    type ApiVersion = ();
+    type Migrations = ();
+    type Xcm = pallet_xcm::Pallet<Self>;
+    type UploadOrigin = EnsureSigned<Self::AccountId>;
+    type InstantiateOrigin = EnsureSigned<Self::AccountId>;
+}
+
 // Create the runtime by composing the FRAME pallets that were previously configured.
 #[frame_support::runtime]
 mod runtime {
@@ -304,6 +339,9 @@ mod runtime {
 
 	#[runtime::pallet_index(8)]
 	pub type Utility = pallet_utility;
+
+	#[runtime::pallet_index(9)]
+	pub type Contracts = pallet_contracts;
 }
 
 /// The address format for describing accounts.
