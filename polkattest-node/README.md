@@ -5,9 +5,9 @@
 <img height="70px" alt="Polkadot SDK Logo" src="https://github.com/paritytech/polkadot-sdk/raw/master/docs/images/Polkadot_Logo_Horizontal_Pink_White.png#gh-dark-mode-only"/>
 <img height="70px" alt="Polkadot SDK Logo" src="https://github.com/paritytech/polkadot-sdk/raw/master/docs/images/Polkadot_Logo_Horizontal_Pink_Black.png#gh-light-mode-only"/>
 <br /><br />
-<a href="psylabs.io"><img src="https://www.psylabs.io/assets/PsylabsLogo-BTz7r7n-.png" alt="PsyLabs Logo" /></a>
+<a href="https://www.psylabs.io/"><img src="https://www.psylabs.io/assets/PsylabsLogo-BTz7r7n-.png" alt="PsyLabs Logo"/></a>
 
-[![Site URL](https://www.psylabs.io/)](https://www.psylabs.io/)
+[PsyLabs](https://www.psylabs.io/)
 
 > This node was created based on the [Pop CLI](https://github.com/r0gue-io/pop-cli) contracts parachain template.
 
