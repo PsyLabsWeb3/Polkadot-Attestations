@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { ApiPromise, WsProvider } from "@polkadot/api";
-import { web3FromAddress } from "@polkadot/extension-dapp";
+import { web3FromAddress, web3Enable } from "@polkadot/extension-dapp";
 import { Signer } from "@polkadot/api/types";
 import { SubmittableExtrinsicFunction } from "@polkadot/api/promise/types";
 
@@ -19,6 +19,7 @@ export type SchemaData = {
 // Define the API context type
 interface ApiContextType {
   api: ApiPromise | null;
+  isLoading: boolean;
   sendTransaction: (
     selectedAccount: string,
     transaction: SubmittableExtrinsicFunction,
@@ -29,6 +30,7 @@ interface ApiContextType {
 // Create the context with default values
 const ApiContext = createContext<ApiContextType>({
   api: null,
+  isLoading: false,
   sendTransaction: async () => {},
 });
 
@@ -40,6 +42,7 @@ export const ApiProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [api, setApi] = useState<ApiPromise | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false); // Nuevo estado
 
   // Setup the API connection
   useEffect(() => {
@@ -58,6 +61,15 @@ export const ApiProvider: React.FC<{ children: React.ReactNode }> = ({
     params: SchemaData[]
   ): Promise<void> => {
     try {
+      setIsLoading(true);
+
+      const extensions = await web3Enable("Polkattest");
+      if (extensions.length === 0) {
+        throw new Error(
+          "No extension found. Please install Polkadot{.js} or Talisman extension."
+        );
+      }
+
       const signer = (await web3FromAddress(selectedAccount)).signer as Signer;
 
       const unsub = await transaction(...params).signAndSend(
@@ -97,18 +109,20 @@ export const ApiProvider: React.FC<{ children: React.ReactNode }> = ({
             );
             alert(`Transaction finalized at blockHash ${status.asFinalized}`);
             unsub();
+            setIsLoading(false);
           }
         }
       );
     } catch (error) {
       console.error("Error during transaction:", error);
       alert(`Error during transaction: ${error}`);
+      setIsLoading(false);
       throw error;
     }
   };
 
   return (
-    <ApiContext.Provider value={{ api, sendTransaction }}>
+    <ApiContext.Provider value={{ api, isLoading, sendTransaction }}>
       {children}
     </ApiContext.Provider>
   );

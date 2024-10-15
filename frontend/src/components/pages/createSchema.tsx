@@ -8,6 +8,7 @@ import {
   Select,
   HStack,
   Text,
+  Spinner,
 } from "@chakra-ui/react";
 
 import Header from "../templates/Header/Header";
@@ -19,7 +20,7 @@ import { useApi, SchemaField, SchemaData } from "../contexts/ApiContext"; // Use
 
 function CreateSchema() {
   const { selectedAccount } = useWallet();
-  const { sendTransaction, api } = useApi(); // Access the API context
+  const { sendTransaction, api, isLoading } = useApi(); // Access the API context
 
   const [schemaName, setSchemaName] = useState("");
 
@@ -209,8 +210,13 @@ function CreateSchema() {
               _hover={{ bg: "brand.secondary" }}
               border="none"
               onClick={handleInsertSchema}
+              isDisabled={isLoading}
             >
-              Create Schema
+              {isLoading ? (
+                <Spinner size="sm" color="white" />
+              ) : (
+                "Create Schema"
+              )}
             </Button>
           </VStack>
         </Box>
