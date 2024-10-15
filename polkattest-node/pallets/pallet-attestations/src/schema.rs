@@ -16,6 +16,7 @@ pub struct Schema {
     pub id: u32,
     pub name: BoundedVec<u8, ConstU32<SIZE_STRINGS>>,
     pub fields: BoundedVec<SchemaField, ConstU32<SIZE_OBJECT_VECTORS>>,
+    pub issuer: BoundedVec<u8, ConstU32<SIZE_STRINGS>>,
 }
 
 /// Structure for a Schema Field object in our Attestations architecture.

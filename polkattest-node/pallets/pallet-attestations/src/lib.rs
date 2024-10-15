@@ -6,6 +6,7 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
 pub mod schema;
+pub use crate::schema::SIZE_STRINGS;
 
 // Re-export pallet items so that they can be accessed from the crate namespace.
 pub use pallet::*;
@@ -94,6 +95,8 @@ pub mod pallet {
 	pub enum Error<T> {
 		/// There was an attempt to insert an attestation with an invalid schema id.
 		SchemaNotFound,
+		/// The issuer's account ID is longer than the allowed account id length.
+		AccountIdTooLong,
 	}
 
 	/// The pallet's dispatchable functions ([`Call`]s).
@@ -116,6 +119,16 @@ pub mod pallet {
 			// Update the schema with the new ID
 			let mut new_schema = schema;
 			new_schema.id = schema_id;
+
+			// Encode the issuer's account ID into a Vec<u8>
+			let account_id_as_bytes = who.encode();
+
+			// Convert the Vec<u8> to BoundedVec<u8, ConstU32<SIZE_STRINGS>>
+			let issuer: BoundedVec<u8, ConstU32<SIZE_STRINGS>> = account_id_as_bytes.try_into()
+				.map_err(|_| Error::<T>::AccountIdTooLong)?;
+			
+			// Update the schema with the new issuer
+			new_schema.issuer = issuer;
 
             // Insert or update the schema in the storage map
             Schemas::<T>::insert(schema_id, new_schema);
@@ -154,6 +167,16 @@ pub mod pallet {
 			// Update the attestation with the new ID
 			let mut new_attestation = attestation;
 			new_attestation.id = attestation_id;
+
+			// Encode the issuer's account ID into a Vec<u8>
+			let account_id_as_bytes = who.encode();
+
+			// Convert the Vec<u8> to BoundedVec<u8, ConstU32<SIZE_STRINGS>>
+			let issuer: BoundedVec<u8, ConstU32<SIZE_STRINGS>> = account_id_as_bytes.try_into()
+				.map_err(|_| Error::<T>::AccountIdTooLong)?;
+			
+			// Update the attestation with the new issuer
+			new_attestation.issuer = issuer;
 
             // Insert the attestation in the storage map
             Attestations::<T>::insert(attestation_id, new_attestation);
