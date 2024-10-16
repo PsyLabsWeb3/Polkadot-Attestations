@@ -11,6 +11,10 @@ pub use crate::schema::SIZE_STRINGS;
 // Re-export pallet items so that they can be accessed from the crate namespace.
 pub use pallet::*;
 
+// Ensure the timestamp pallet is included in your runtime.
+// use frame_system::ensure_signed;
+// use pallet_timestamp::Pallet as TimestampPallet;
+
 // FRAME pallets require their own "mock runtimes" to be able to run unit tests. This module
 // contains a mock runtime specific for testing this pallet's functionality.
 #[cfg(test)]
@@ -191,3 +195,56 @@ pub mod pallet {
         }
 	}
 }
+
+
+
+// Pseudocode
+// Ensure the timestamp pallet is included in your runtime.
+// Import the frame_system::ensure_signed and pallet_timestamp::Pallet as TimestampPallet.
+// Retrieve the current timestamp using TimestampPallet::get().
+// Add the timestamp to the attestation data structure.
+
+// impl<T: Config> Pallet<T> {
+//     /// Function which inserts an attestation into the pallet storage.
+//     ///
+//     /// Requires at least one schema to be previously inserted.
+//     #[pallet::call_index(1)]
+//     #[pallet::weight(T::WeightInfo::insert_attestation())]
+//     pub fn insert_attestation(origin: OriginFor<T>, attestation: Attestation) -> DispatchResult {
+//         let who = ensure_signed(origin)?;
+
+//         // Check if the counter is already initialized, if not set it to 1
+//         if NextAttestationId::<T>::get() == 0 {
+//             NextAttestationId::<T>::put(1);
+//         }
+
+//         // Validate that the schemaID exists in the Schemas storage
+//         ensure!(
+//             Schemas::<T>::contains_key(attestation.schema_id),
+//             Error::<T>::SchemaNotFound
+//         );
+
+//         // Get the next unique attestation ID
+//         let attestation_id = NextAttestationId::<T>::get();
+
+//         // Retrieve the current timestamp
+//         let current_timestamp = TimestampPallet::<T>::get();
+
+//         // Update the attestation with the new ID and timestamp
+//         let mut new_attestation = attestation;
+//         new_attestation.id = attestation_id;
+//         new_attestation.timestamp = current_timestamp;
+
+//         // Insert the attestation into storage
+//         Attestations::<T>::insert(attestation_id, new_attestation);
+
+//         // Increment the attestation ID counter
+//         NextAttestationId::<T>::put(attestation_id + 1);
+
+//         Ok(())
+//     }
+// }
+
+// Ensure that your Attestation struct has a timestamp field of the appropriate type (e.g., u64).
+// Make sure the timestamp pallet is included in your runtime configuration.
+// Adjust the imports and types according to your specific implementation and runtime configuration.
