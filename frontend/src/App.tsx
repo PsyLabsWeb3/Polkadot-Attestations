@@ -3,6 +3,7 @@ import "./App.css";
 import Home from "./components/pages/Home"; // Home page component
 import Schemas from "./components/pages/schemas"; // Schemas page component
 import Attestations from "./components/pages/attestations"; // Attestations page component
+import WhyAtt from "./components/pages/whyatt";
 import CreateSchema from "./components/pages/createSchema"; // Create Schema page component
 import Scan from "./components/pages/scan"; // Scan page component
 import MakeAttestation from "./components/pages/makeattestation"; // Make Attestation page component
@@ -37,6 +38,8 @@ function App() {
             <Route path="/makeattestation" element={<MakeAttestation />} />{" "}
             {/* Route for Make Attestation page */}
             <Route path="/userdashboard" element={<UserDashboard />} />{" "}
+            {/* Route for User Dashboard page */}
+            <Route path="/whyatt" element={<WhyAtt />} />{" "}
             {/* Route for User Dashboard page */}
           </Routes>
         </Flex>
