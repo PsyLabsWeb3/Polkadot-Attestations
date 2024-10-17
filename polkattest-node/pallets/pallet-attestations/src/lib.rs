@@ -101,6 +101,8 @@ pub mod pallet {
 		SchemaNotFound,
 		/// The issuer's account ID is longer than the allowed account id length.
 		AccountIdTooLong,
+		/// The block number conversion failed.
+		BlockNumberConversionFailed,
 	}
 
 	/// The pallet's dispatchable functions ([`Call`]s).
@@ -168,9 +170,16 @@ pub mod pallet {
 			// Get the next unique attestation ID
 			let attestation_id = NextAttestationId::<T>::get();
 
-			// Update the attestation with the new ID
+			// Retrieve the current block number
+			let current_block_number = <frame_system::Pallet<T>>::block_number();
+
+			// Convert the block number to u32
+			let current_block_number_u32: u32 = current_block_number.try_into().map_err(|_| Error::<T>::BlockNumberConversionFailed)?;
+
+			// Update the attestation with the new ID and block number
 			let mut new_attestation = attestation;
 			new_attestation.id = attestation_id;
+			new_attestation.block_number = current_block_number_u32;
 
 			// Encode the issuer's account ID into a Vec<u8>
 			let account_id_as_bytes = who.encode();
@@ -198,53 +207,3 @@ pub mod pallet {
 
 
 
-// Pseudocode
-// Ensure the timestamp pallet is included in your runtime.
-// Import the frame_system::ensure_signed and pallet_timestamp::Pallet as TimestampPallet.
-// Retrieve the current timestamp using TimestampPallet::get().
-// Add the timestamp to the attestation data structure.
-
-// impl<T: Config> Pallet<T> {
-//     /// Function which inserts an attestation into the pallet storage.
-//     ///
-//     /// Requires at least one schema to be previously inserted.
-//     #[pallet::call_index(1)]
-//     #[pallet::weight(T::WeightInfo::insert_attestation())]
-//     pub fn insert_attestation(origin: OriginFor<T>, attestation: Attestation) -> DispatchResult {
-//         let who = ensure_signed(origin)?;
-
-//         // Check if the counter is already initialized, if not set it to 1
-//         if NextAttestationId::<T>::get() == 0 {
-//             NextAttestationId::<T>::put(1);
-//         }
-
-//         // Validate that the schemaID exists in the Schemas storage
-//         ensure!(
-//             Schemas::<T>::contains_key(attestation.schema_id),
-//             Error::<T>::SchemaNotFound
-//         );
-
-//         // Get the next unique attestation ID
-//         let attestation_id = NextAttestationId::<T>::get();
-
-//         // Retrieve the current timestamp
-//         let current_timestamp = TimestampPallet::<T>::get();
-
-//         // Update the attestation with the new ID and timestamp
-//         let mut new_attestation = attestation;
-//         new_attestation.id = attestation_id;
-//         new_attestation.timestamp = current_timestamp;
-
-//         // Insert the attestation into storage
-//         Attestations::<T>::insert(attestation_id, new_attestation);
-
-//         // Increment the attestation ID counter
-//         NextAttestationId::<T>::put(attestation_id + 1);
-
-//         Ok(())
-//     }
-// }
-
-// Ensure that your Attestation struct has a timestamp field of the appropriate type (e.g., u64).
-// Make sure the timestamp pallet is included in your runtime configuration.
-// Adjust the imports and types according to your specific implementation and runtime configuration.
