@@ -5,6 +5,7 @@ import DataSection from "../pages/datasection"; // Asegúrate de que la ruta sea
 import HowItWorks from "./howitworks";
 import Footer from "../pages/footer"; // Importación del Footer
 import Pallet from "../pages/pallet"
+import WhyAtt from "./whyatt";
 
 function Home() {
   return (
@@ -20,7 +21,12 @@ function Home() {
         <Pallet />
       </Box>
 
-      {/* Sección de Pallet */}
+      {/* Sección de WhyAtt */}
+      <Box >
+        <WhyAtt />
+      </Box>
+
+      {/* Sección de How it works */}
       <Box >
         <HowItWorks />
       </Box>

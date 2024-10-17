@@ -33,8 +33,9 @@ function App() {
             <Route path="/attest" element={<SelectSchemaToAttest />} />
             {/* Route for Attest page */}
             <Route path="/attest/:id" element={<Attest />} />
-            <Route path="/userdashboard" element={<UserDashboard />} />
             {/* Route for User Dashboard page */}
+            <Route path="/userdashboard" element={<UserDashboard />} />
+
           </Routes>
         </Flex>
       </Router>
