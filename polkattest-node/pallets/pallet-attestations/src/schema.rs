@@ -32,6 +32,7 @@ pub struct SchemaField {
 pub struct Attestation {
     pub id: u32,
     pub schema_id: u32,
+    pub block_number: u32,
     pub subject: BoundedVec<u8, ConstU32<SIZE_STRINGS>>,
     pub issuer: BoundedVec<u8, ConstU32<SIZE_STRINGS>>,
     pub data: BoundedVec<SchemaField, ConstU32<SIZE_OBJECT_VECTORS>>,
