@@ -15,6 +15,37 @@
 
 </div>
 
-* ⏫ This parachain provides the infrastructure neccesary to implement the attestations architecture.
+* ⏫ This parachain provides the infrastructure necessary to implement the attestations architecture.
 
 * 🔧 Its [runtime](./runtime) is configured to support WebAssembly smart contracts.
+
+---
+
+## 🚀 Getting Started
+
+To set up and run the Polkattest Parachain, follow these instructions.
+
+### Prerequisites
+
+Ensure you have the [POP CLI](https://github.com/r0gue-io/pop-cli) installed. If not, use the following command:
+
+### 1. Install POP CLI
+
+```bash
+pop install
+```
+### 2. Compile the Parachain
+Once the POP CLI is installed, compile the parachain by running the following command:
+
+```bash
+pop build --release
+```
+### 3. Run the Parachain
+After compiling the parachain, you can bring it up using the network configuration:
+
+```bash
+pop up parachain -f ./network.toml
+```
+
+## Contact
+For any questions or additional information, feel free to reach out at [hello@psylabs.io](mailto:hello@psylabs.io)
