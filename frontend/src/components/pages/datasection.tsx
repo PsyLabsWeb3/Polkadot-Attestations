@@ -1,8 +1,8 @@
 import { Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom"; // Importamos useNavigate
-import { keyframes } from "@emotion/react"; // Importamos keyframes para la animación
+import { useNavigate } from "react-router-dom"; // Hook for navigation between routes
+import { keyframes } from "@emotion/react"; // Keyframes utility for animation
 
-// Animación de gradiente
+// Gradient animation configuration
 const gradientAnimation = keyframes`
   0% {
     background-position: 0% 50%;
@@ -16,7 +16,7 @@ const gradientAnimation = keyframes`
 `;
 
 function DataSection() {
-  const navigate = useNavigate(); // Hook para redirigir
+  const navigate = useNavigate(); // Used to programmatically navigate between pages
 
   return (
     <Flex
@@ -24,19 +24,17 @@ function DataSection() {
       h="100vh"
       bgGradient="linear(to-r, #000000, #7204ff)"
       bgSize="200% 200%"
-      animation={`${gradientAnimation} 15s ease infinite`} // Añadimos la animación
+      animation={`${gradientAnimation} 15s ease infinite`} // Infinite gradient animation for background
       flexDirection="column"
       alignItems="center"
       justifyContent="center"
       color="white"
       p="2rem"
     >
-      {/* Título */}
       <Heading fontSize="3rem" mb="2rem">
         Attestations
       </Heading>
 
-      {/* Sección de estadísticas */}
       <Flex
         w="100%"
         maxW="1200px"
@@ -61,26 +59,28 @@ function DataSection() {
         </Box>
       </Flex>
 
-      {/* Botones */}
-      <Flex justifyContent="center" alignItems="center" gap="2rem" flexWrap="wrap">
-        {/* Botón Make Attestation */}
+      <Flex
+        justifyContent="center"
+        alignItems="center"
+        gap="2rem"
+        flexWrap="wrap"
+      >
         <Button
           bg="pink.500"
           color="white"
           size="lg"
           _hover={{ bg: "pink.600" }}
-          onClick={() => navigate("/attestations")} // Redirige a la página Attestation
+          onClick={() => navigate("/attest")}
         >
           Make Attestation
         </Button>
 
-        {/* Botón Create New Schema */}
         <Button
           bg="pink.500"
           color="white"
           size="lg"
           _hover={{ bg: "pink.600" }}
-          onClick={() => navigate("/createschema")} // Redirige a la página CreateSchema
+          onClick={() => navigate("/create-schema")}
         >
           Create New Schema
         </Button>

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Box,
   Heading,
@@ -8,39 +9,40 @@ import {
   Select,
   HStack,
   Text,
+  Spinner,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
 } from "@chakra-ui/react";
-
 import Header from "../templates/Header/Header";
 import Footer from "../pages/footer";
-
-import { useState } from "react";
 import { useWallet } from "../contexts/AccountContext";
-import { useApi, SchemaField, SchemaData } from "../contexts/ApiContext"; // Use the context here
+import { useApi, SchemaField, SchemaData } from "../contexts/ApiContext";
 
 function CreateSchema() {
   const { selectedAccount } = useWallet();
-  const { sendTransaction, api } = useApi(); // Access the API context
+  const { sendTransaction, api, isTransactionLoading } = useApi();
 
   const [schemaName, setSchemaName] = useState("");
-
-  // State for managing schema fields
   const [schemaFields, setSchemaFields] = useState<SchemaField[]>([
-    { name: "", data_type: "", value: "" },
+    { name: "", dataType: "", value: "" },
   ]);
 
-  // Add a new field to the schema
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setErrorMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
   const handleAddField = () => {
-    setSchemaFields([...schemaFields, { name: "", data_type: "", value: "" }]);
+    setSchemaFields([...schemaFields, { name: "", dataType: "", value: "" }]);
   };
 
-  // Remove the last field from the schema
   const handleRemoveLastField = () => {
     if (schemaFields.length > 1) {
       setSchemaFields(schemaFields.slice(0, -1));
     }
   };
 
-  // Update a field in the schema
   const handleFieldChange = (index: number, field: string, value: string) => {
     const updatedFields = schemaFields.map((fieldItem, i) =>
       i === index ? { ...fieldItem, [field]: value } : fieldItem
@@ -48,30 +50,36 @@ function CreateSchema() {
     setSchemaFields(updatedFields);
   };
 
-  // Handler to insert a schema into the blockchain
   const handleInsertSchema = async () => {
     if (!api) {
-      console.log("API not ready");
-      alert("API not ready");
+      setErrorMessage("API not ready.");
       return;
     }
 
     if (!selectedAccount) {
-      console.log("Account not selected");
-      alert("Account not selected");
+      setErrorMessage("Account not selected or wallet not connected.");
       return;
     }
 
-    // Map the schema fields
     const schemaData: SchemaData = {
       name: schemaName,
       fields: schemaFields,
     };
 
-    // Send the transaction
-    await sendTransaction(selectedAccount, api.tx.attestations.insertSchema, [
-      schemaData,
-    ]);
+    setIsSubmitting(true);
+    setErrorMessage(null);
+
+    try {
+      await sendTransaction(selectedAccount, api.tx.attestations.insertSchema, [
+        schemaData,
+      ]);
+      setSuccessMessage(`Transaction successful!`);
+    } catch (error) {
+      console.error("Error inserting schema:", error);
+      setErrorMessage(`Failed to insert schema: ${error}`);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -82,12 +90,54 @@ function CreateSchema() {
       bg="brand.background"
       color="brand.black"
     >
-      {/* Header */}
       <Box w="100%">
         <Header />
       </Box>
 
-      {/* Main content */}
+      {(error || successMessage) && !isTransactionLoading && (
+        <Flex
+          position="fixed"
+          top="0"
+          left="0"
+          w="100vw"
+          h="100vh"
+          bg="rgba(0, 0, 0, 0.5)"
+          justify="center"
+          align="center"
+          zIndex="9999"
+        >
+          <Alert
+            status={error ? "error" : "success"}
+            variant="solid"
+            flexDirection="column"
+            alignItems="center"
+            justifyContent="center"
+            textAlign="center"
+            height="200px"
+            width="400px"
+            borderRadius="md"
+            boxShadow="lg"
+          >
+            <AlertIcon boxSize="40px" mr={0} />
+            <AlertTitle mt={4} mb={1} fontSize="lg">
+              {error ? "Error" : "Success"}
+            </AlertTitle>
+            <AlertDescription maxWidth="sm">
+              {error || successMessage}
+            </AlertDescription>
+            <Button
+              mt={4}
+              onClick={() => {
+                setErrorMessage(null);
+                setSuccessMessage(null);
+              }}
+            >
+              Close
+            </Button>
+          </Alert>
+        </Flex>
+      )}
+
       <Flex
         justify="center"
         alignItems="center"
@@ -108,7 +158,6 @@ function CreateSchema() {
             Create a Schema
           </Heading>
 
-          {/* Schema Name Input */}
           <Box mt="2rem">
             <Text fontWeight="bold" color="gray.700">
               Name
@@ -126,16 +175,13 @@ function CreateSchema() {
             />
           </Box>
 
-          {/* Instructions */}
           <Text mb={2} fontWeight="bold" color="gray.700" marginTop={12}>
             Include fields that are essential for your schema's functionality.
           </Text>
 
-          {/* Schema Fields */}
           <VStack mt="2rem" spacing={4} align="stretch">
             {schemaFields.map((field, index) => (
               <HStack key={index} spacing={3}>
-                {/* Field Name Input */}
                 <Input
                   placeholder="Field name"
                   value={field.name}
@@ -148,25 +194,18 @@ function CreateSchema() {
                   _placeholder={{ color: "gray.500" }}
                   _focus={{ borderColor: "brand.primary" }}
                 />
-
-                {/* Field Type Select */}
                 <Select
                   placeholder="Select type"
-                  value={field.data_type}
+                  value={field.dataType}
                   onChange={(e) =>
-                    handleFieldChange(index, "data_type", e.target.value)
+                    handleFieldChange(index, "dataType", e.target.value)
                   }
                   bg="white"
                   borderColor="gray.500"
                   color="black"
                   _hover={{ bg: "brand.grayLight" }}
                   _focus={{ borderColor: "brand.primary" }}
-                  sx={{
-                    option: {
-                      bg: "white",
-                      color: "black",
-                    },
-                  }}
+                  sx={{ option: { bg: "white", color: "black" } }}
                 >
                   <option value="string">String</option>
                   <option value="number">Number</option>
@@ -178,7 +217,6 @@ function CreateSchema() {
               </HStack>
             ))}
 
-            {/* Add and Remove Field Buttons */}
             <HStack spacing={4} alignSelf="flex-start">
               <Button
                 onClick={handleAddField}
@@ -201,7 +239,6 @@ function CreateSchema() {
               </Button>
             </HStack>
 
-            {/* Submit Button */}
             <Button
               mt="2rem"
               bg="brand.primary"
@@ -209,6 +246,12 @@ function CreateSchema() {
               _hover={{ bg: "brand.secondary" }}
               border="none"
               onClick={handleInsertSchema}
+              isDisabled={isSubmitting || isTransactionLoading}
+              leftIcon={
+                isSubmitting || isTransactionLoading ? (
+                  <Spinner size="sm" />
+                ) : undefined
+              }
             >
               Create Schema
             </Button>
@@ -216,7 +259,6 @@ function CreateSchema() {
         </Box>
       </Flex>
 
-      {/* Footer */}
       <Box w="100%">
         <Footer />
       </Box>

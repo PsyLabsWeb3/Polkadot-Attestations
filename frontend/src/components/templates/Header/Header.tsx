@@ -77,7 +77,7 @@ function Header() {
         </Link>
 
         <Link
-          href="/attestations"
+          href="/attest"
           fontSize="lg"
           fontWeight="medium"
           color="gray.500"

@@ -6,9 +6,14 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
 pub mod schema;
+pub use crate::schema::SIZE_STRINGS;
 
 // Re-export pallet items so that they can be accessed from the crate namespace.
 pub use pallet::*;
+
+// Ensure the timestamp pallet is included in your runtime.
+// use frame_system::ensure_signed;
+// use pallet_timestamp::Pallet as TimestampPallet;
 
 // FRAME pallets require their own "mock runtimes" to be able to run unit tests. This module
 // contains a mock runtime specific for testing this pallet's functionality.
@@ -94,6 +99,10 @@ pub mod pallet {
 	pub enum Error<T> {
 		/// There was an attempt to insert an attestation with an invalid schema id.
 		SchemaNotFound,
+		/// The issuer's account ID is longer than the allowed account id length.
+		AccountIdTooLong,
+		/// The block number conversion failed.
+		BlockNumberConversionFailed,
 	}
 
 	/// The pallet's dispatchable functions ([`Call`]s).
@@ -116,6 +125,16 @@ pub mod pallet {
 			// Update the schema with the new ID
 			let mut new_schema = schema;
 			new_schema.id = schema_id;
+
+			// Encode the issuer's account ID into a Vec<u8>
+			let account_id_as_bytes = who.encode();
+
+			// Convert the Vec<u8> to BoundedVec<u8, ConstU32<SIZE_STRINGS>>
+			let issuer: BoundedVec<u8, ConstU32<SIZE_STRINGS>> = account_id_as_bytes.try_into()
+				.map_err(|_| Error::<T>::AccountIdTooLong)?;
+			
+			// Update the schema with the new issuer
+			new_schema.issuer = issuer;
 
             // Insert or update the schema in the storage map
             Schemas::<T>::insert(schema_id, new_schema);
@@ -151,9 +170,26 @@ pub mod pallet {
 			// Get the next unique attestation ID
 			let attestation_id = NextAttestationId::<T>::get();
 
-			// Update the attestation with the new ID
+			// Retrieve the current block number
+			let current_block_number = <frame_system::Pallet<T>>::block_number();
+
+			// Convert the block number to u32
+			let current_block_number_u32: u32 = current_block_number.try_into().map_err(|_| Error::<T>::BlockNumberConversionFailed)?;
+
+			// Update the attestation with the new ID and block number
 			let mut new_attestation = attestation;
 			new_attestation.id = attestation_id;
+			new_attestation.block_number = current_block_number_u32;
+
+			// Encode the issuer's account ID into a Vec<u8>
+			let account_id_as_bytes = who.encode();
+
+			// Convert the Vec<u8> to BoundedVec<u8, ConstU32<SIZE_STRINGS>>
+			let issuer: BoundedVec<u8, ConstU32<SIZE_STRINGS>> = account_id_as_bytes.try_into()
+				.map_err(|_| Error::<T>::AccountIdTooLong)?;
+			
+			// Update the attestation with the new issuer
+			new_attestation.issuer = issuer;
 
             // Insert the attestation in the storage map
             Attestations::<T>::insert(attestation_id, new_attestation);
@@ -168,3 +204,6 @@ pub mod pallet {
         }
 	}
 }
+
+
+

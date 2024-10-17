@@ -23,7 +23,7 @@ function HowItWorks() {
       description:
         "Description for making an attestation. You can explain the process here.",
       buttonLabel: "Make Attestation",
-      buttonRoute: "/attestations",
+      buttonRoute: "/attest",
     },
   ];
 
