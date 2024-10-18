@@ -1,7 +1,16 @@
-import { Box, Text, VStack, Button, Input } from "@chakra-ui/react";
+import {
+  Box,
+  Text,
+  VStack,
+  Input,
+  InputGroup,
+  InputRightElement,
+  Icon,
+} from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useApi } from "../contexts/ApiContext";
+import { SearchIcon } from "@chakra-ui/icons"; // Chakra UI icon
 
 function SearchSchemasById() {
   const [schemaId, setSchemaId] = useState("");
@@ -41,30 +50,46 @@ function SearchSchemasById() {
       </Text>
 
       <VStack spacing={4}>
-        <Input
-          placeholder="Search By Schema ID"
-          value={schemaId}
-          onChange={(e) => setSchemaId(e.target.value)}
-          w="100%"
-          bg="white"
-          borderColor="gray.700"
-          color="gray.700"
-          _placeholder={{ color: "gray.500" }}
-          _focus={{ borderColor: "brand.primary" }}
-        />
+        <InputGroup>
+          <Input
+            placeholder="Search By Schema ID"
+            value={schemaId}
+            onChange={(e) => setSchemaId(e.target.value)}
+            w="100%"
+            bg="transparent"
+            zIndex={3}
+            color="gray.700"
+            _placeholder={{ color: "gray.500" }}
+            _focus={{
+              borderColor: "brand.primary",
+              boxShadow: "2px 2px 2px 4px brand.primary",
+              outline: "none",
+            }}
+            _focusVisible={{
+              outline: "none",
+            }}
+            borderRadius="md"
+            pr="4.5rem"
+          />
+          <InputRightElement width="4.5rem">
+            <Box
+              bg="brand.primary"
+              borderRadius="md"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              h="100%"
+              w="100%"
+              cursor="pointer"
+              onClick={handleSearch}
+              _hover={{ bg: "brand.secondary" }}
+            >
+              <SearchIcon color="white" />
+            </Box>
+          </InputRightElement>
+        </InputGroup>
 
         {errorMessage && <Box color="red.500">{errorMessage}</Box>}
-
-        <Button
-          bg="brand.primary"
-          color="white"
-          _hover={{ bg: "brand.secondary" }}
-          w="100%"
-          isLoading={isQueryLoading}
-          onClick={handleSearch}
-        >
-          Search
-        </Button>
       </VStack>
     </>
   );

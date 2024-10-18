@@ -6,7 +6,7 @@ import SelectSchemaToAttest from "./components/pages/SelectSchemaToAttest"; // A
 import CreateSchema from "./components/pages/createSchema"; // Create Schema page component
 import Scan from "./components/pages/scan"; // Scan page component
 import Attest from "./components/pages/Attest"; // Make Attestation page component
-import UserDashboard from "./components/pages/userdashboard"; // User Dashboard page component
+import UserDashboard from "./components/pages/UserDashboard"; // User Dashboard page component
 import { ChakraProvider, Flex } from "@chakra-ui/react"; // ChakraProvider imported for Chakra UI
 import theme from "./theme/theme"; // Importing custom theme
 
@@ -34,8 +34,7 @@ function App() {
             {/* Route for Attest page */}
             <Route path="/attest/:id" element={<Attest />} />
             {/* Route for User Dashboard page */}
-            <Route path="/userdashboard" element={<UserDashboard />} />
-
+            <Route path="/user-dashboard" element={<UserDashboard />} />
           </Routes>
         </Flex>
       </Router>

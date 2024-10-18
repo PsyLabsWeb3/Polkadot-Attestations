@@ -48,7 +48,7 @@ interface ApiContextType {
   getAllByIssuer: (
     queryFunction: () => Promise<[StorageKey, Option<Codec>][]>,
     issuerAddress: string
-  ) => Promise<SchemaData[]>;
+  ) => Promise<any[]>;
 }
 
 const ApiContext = createContext<ApiContextType>({
@@ -73,7 +73,7 @@ export const ApiProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     const initializeApi = async () => {
-      const wsProvider = new WsProvider("ws://127.0.0.1:39865");
+      const wsProvider = new WsProvider("ws://127.0.0.1:33677");
       const apiInstance = await ApiPromise.create({ provider: wsProvider });
       setApi(apiInstance);
     };
