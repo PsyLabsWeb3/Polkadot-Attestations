@@ -44,6 +44,7 @@ pallet-timestamp.workspace = true
 pallet-transaction-payment-rpc-runtime-api.workspace = true
 pallet-transaction-payment.workspace = true
 pallet-utility.workspace = true
+pallet-treasury.workspace = true
 sp-api.workspace = true
 sp-block-builder.workspace = true
 sp-consensus-aura.workspace = true
@@ -118,6 +119,7 @@ std = [
     "pallet-xcm/std",
 	"pallet-attestations/std",
     "pallet-utility/std",
+    "pallet-treasury/std",
     "parachain-info/std",
     "parachains-common/std",
     "polkadot-parachain-primitives/std",
@@ -159,6 +161,7 @@ runtime-benchmarks = [
 	"pallet-xcm/runtime-benchmarks",
 	"pallet-attestations/runtime-benchmarks",
     "pallet-utility/runtime-benchmarks",
+    "pallet-treasury/runtime-benchmarks",
 	"parachains-common/runtime-benchmarks",
 	"polkadot-parachain-primitives/runtime-benchmarks",
 	"polkadot-runtime-common/runtime-benchmarks",
@@ -189,6 +192,7 @@ try-runtime = [
 	"pallet-xcm/try-runtime",
 	"pallet-attestations/try-runtime",
     "pallet-utility/try-runtime",
+    "pallet-treasury/try-runtime",
 	"parachain-info/try-runtime",
 	"polkadot-runtime-common/try-runtime",
 	"sp-runtime/try-runtime",

@@ -52,7 +52,7 @@ use polkadot_runtime_common::{
     xcm_sender::NoPriceForMessageDelivery, BlockHashCount, SlowAdjustingFeeUpdate,
 };
 use sp_consensus_aura::sr25519::AuthorityId as AuraId;
-use sp_runtime::Perbill;
+use sp_runtime::{Perbill, Permill};
 use sp_version::RuntimeVersion;
 use xcm::latest::prelude::BodyId;
 
@@ -66,6 +66,9 @@ use super::{
     MAXIMUM_BLOCK_WEIGHT, MICROUNIT, NORMAL_DISPATCH_RATIO, SLOT_DURATION, VERSION,
 };
 use xcm_config::{RelayLocation, XcmOriginToTransactDispatchOrigin};
+
+pub const DAYS: BlockNumber = 24 * 60 * 60 / 6; // 6-second block times
+pub const DOLLARS: Balance = 1_000_000_000_000;
 
 parameter_types! {
     pub const Version: RuntimeVersion = VERSION;
@@ -95,6 +98,14 @@ parameter_types! {
         .avg_block_initialization(AVERAGE_ON_INITIALIZE_RATIO)
         .build_or_panic();
     pub const SS58Prefix: u16 = 42;
+
+    // Treasury Pallet parameter types
+    pub const TreasuryPalletId: frame_support::PalletId = frame_support::PalletId(*b"py/trsry");
+    pub const SpendPeriod: BlockNumber = 7 * DAYS; // Spending period (in blocks)
+    pub const Burn: Permill = Permill::from_percent(1); // 1% of the treasury's funds will be burned
+    pub const ProposalBond: Permill = Permill::from_percent(5); // 5% bond for proposals
+    pub const ProposalBondMinimum: Balance = 1 * DOLLARS; // Minimum bond of 1 dollar (adjust according to your currency)
+    pub const MaxApprovals: u32 = 100; // Maximum number of approvals at once
 }
 
 /// The default types are being injected by [`derive_impl`](`frame_support::derive_impl`) from
@@ -320,3 +331,24 @@ impl pallet_utility::Config for Runtime {
 	type PalletsOrigin = OriginCaller;
 	type WeightInfo = pallet_utility::weights::SubstrateWeight<Runtime>;
 }
+
+impl pallet_treasury::Config for Runtime {
+    type RuntimeEvent = RuntimeEvent;
+    type Currency = Balances;
+    type RejectOrigin = EnsureRoot<AccountId>;
+    type SpendPeriod = SpendPeriod;
+    type Burn = Burn;
+    type PalletId = TreasuryPalletId;
+    type BurnDestination = ();
+    type SpendFunds = ();
+    type MaxApprovals = MaxApprovals;
+    //type SpendOrigin = ();
+    type AssetKind = ();
+    type Beneficiary = AccountId;
+    //type BeneficiaryLookup = ();
+    //type Paymaster = ();
+    type BalanceConverter = ();
+    type PayoutPeriod = SpendPeriod;
+	type WeightInfo = pallet_treasury::weights::SubstrateWeight<Runtime>;
+}
+

@@ -36,4 +36,5 @@ frame_benchmarking::define_benchmarks!(
     [pallet_message_queue, MessageQueue]
     [pallet_attestations, Attestations]
     [pallet_utility, Utility]
+    [pallet_treasury, Treasury]
 );
