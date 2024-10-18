@@ -18,7 +18,7 @@ function Header() {
 
   const location = useLocation();
   const currentPath = location.pathname;
-  const buttonAndSelectWidth = "11rem";
+  const buttonAndSelectWidth = "12rem";
 
   return (
     <Flex

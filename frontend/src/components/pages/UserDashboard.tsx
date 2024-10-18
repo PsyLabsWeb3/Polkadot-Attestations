@@ -1,10 +1,27 @@
-import { Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
-import Header from "../templates/Header/Header";
-import Footer from "./footer";
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  IconButton,
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
+  Spinner,
+} from "@chakra-ui/react";
+import { CopyIcon } from "@chakra-ui/icons";
 import { useEffect, useState } from "react";
 import { useWallet } from "../contexts/AccountContext";
 import { AttestationData, SchemaData, useApi } from "../contexts/ApiContext";
-import { decodeAddress } from "@polkadot/util-crypto";
+import { decodeAddress, encodeAddress } from "@polkadot/util-crypto";
 import { u8aToHex } from "@polkadot/util";
 import { useNavigate } from "react-router-dom";
 
@@ -70,83 +87,207 @@ function UserDashboard() {
     selectedAccount,
   ]);
 
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+  };
+
+  const sortByIdDescending = (
+    a: { id?: string },
+    b: { id?: string }
+  ): number => {
+    const idA = a.id ? parseInt(a.id, 10) : 0;
+    const idB = b.id ? parseInt(b.id, 10) : 0;
+    return idB - idA;
+  };
+
+  const sortedSchemas = schemas.slice().sort(sortByIdDescending);
+  const sortedAttestations = attestations.slice().sort(sortByIdDescending);
+
   return (
     <Flex direction="column" w="100%" minH="100vh" bg="gray.50">
-      <Header />
-
-      <Flex justify="space-evenly" alignItems="center" flex="1" p={10} w="100%">
+      <Flex justify="center" flex="1" p={10} gap={10} wrap="wrap">
         <Box
-          w="45%"
+          w={{ base: "100%", md: "90%" }}
           bg="white"
-          borderRadius="lg"
           p={6}
-          boxShadow="md"
-          textAlign="center"
+          borderRadius="md"
+          boxShadow="lg"
         >
-          <Heading as="h2" mb={6}>
-            My Schemas
-          </Heading>
-          {schemas.length > 0 ? (
-            schemas.map((schema, index) => (
-              <Box key={index} p={4} borderWidth="1px" borderRadius="md" mb={4}>
-                <Text fontWeight="bold">{schema.name}</Text>
-                <Text>Fields: {schema.fields.length}</Text>
-              </Box>
-            ))
-          ) : (
-            <Text mb={4}>
-              Here you will find your created schemas. You can use the ID to
-              create attestations based on them.
-            </Text>
-          )}
-          <Button
-            bg="brand.primary"
-            color="white"
-            _hover={{ bg: "brand.secondary" }}
-            border="none"
-            onClick={() => navigate("/create-schema")}
+          <Tabs
+            variant="soft-rounded"
+            colorScheme="pink"
+            sx={{
+              ".chakra-tabs__tab:focus": { outline: "none" },
+              ".chakra-tabs__tab[aria-selected=true]": {
+                color: "brand.primary",
+              },
+            }}
           >
-            Create New Schema
-          </Button>
-        </Box>
+            <TabList>
+              <Tab>My Schemas</Tab>
+              <Tab>My Attestations</Tab>
+            </TabList>
+            <TabPanels>
+              <TabPanel>
+                <Flex justify="space-between" align="center" mb={4}>
+                  <Heading as="h3" color="brand.black">
+                    My Schemas
+                  </Heading>
+                  <Button
+                    bg="brand.primary"
+                    color="white"
+                    _hover={{ bg: "brand.secondary" }}
+                    onClick={() => navigate("/create-schema")}
+                  >
+                    Create New Schema
+                  </Button>
+                </Flex>
+                <Box overflowX="auto">
+                  <Table variant="simple" size="md" mt={4} minWidth="600px">
+                    <Thead bg="brand.primary">
+                      <Tr>
+                        <Th color="white" textAlign="center" width="10%">
+                          ID
+                        </Th>
+                        <Th color="white" textAlign="center" width="30%">
+                          Name
+                        </Th>
+                        <Th color="white" textAlign="center" width="30%">
+                          Issuer
+                        </Th>
+                        <Th color="white" textAlign="center" width="20%">
+                          Number of Fields
+                        </Th>
+                      </Tr>
+                    </Thead>
+                    <Tbody>
+                      {!hasFetchedSchemas ? (
+                        <Tr>
+                          <Td colSpan={4} textAlign="center">
+                            <Spinner size="xl" color="pink.500" />
+                          </Td>
+                        </Tr>
+                      ) : sortedSchemas.length > 0 ? (
+                        sortedSchemas.map((schema) => (
+                          <Tr key={schema.id}>
+                            <Td textAlign="center">{schema.id}</Td>
+                            <Td textAlign="center">{schema.name}</Td>
+                            <Td textAlign="center" whiteSpace="nowrap">
+                              You
+                              <IconButton
+                                aria-label="Copy Issuer Address"
+                                icon={<CopyIcon />}
+                                size="xs"
+                                ml={2}
+                                onClick={() =>
+                                  copyToClipboard(
+                                    encodeAddress(decodeAddress(schema.issuer))
+                                  )
+                                }
+                              />
+                            </Td>
+                            <Td textAlign="center">{schema.fields.length}</Td>
+                          </Tr>
+                        ))
+                      ) : (
+                        <Tr>
+                          <Td colSpan={4} textAlign="center">
+                            Here you will find your created schemas. You can use
+                            the ID to create attestations based on them.
+                          </Td>
+                        </Tr>
+                      )}
+                    </Tbody>
+                  </Table>
+                </Box>
+              </TabPanel>
 
-        <Box
-          w="45%"
-          bg="white"
-          borderRadius="lg"
-          p={6}
-          boxShadow="md"
-          textAlign="center"
-        >
-          <Heading as="h2" mb={6}>
-            My Attestations
-          </Heading>
-          {attestations.length > 0 ? (
-            attestations.map((attestation, index) => (
-              <Box key={index} p={4} borderWidth="1px" borderRadius="md" mb={4}>
-                <Text fontWeight="bold">Schema ID: {attestation.schemaId}</Text>
-                <Text>Fields: {attestation.data.length}</Text>
-              </Box>
-            ))
-          ) : (
-            <Text mb={4}>
-              Here you will find your created attestations. You can register new
-              ones and leave a record of your data.
-            </Text>
-          )}
-          <Button
-            bg="brand.primary"
-            color="white"
-            _hover={{ bg: "brand.secondary" }}
-            border="none"
-            onClick={() => navigate("/attest")}
-          >
-            Make New Attestation
-          </Button>
+              <TabPanel>
+                <Flex justify="space-between" align="center" mb={4}>
+                  <Heading as="h3" color="brand.black">
+                    My Attestations
+                  </Heading>
+                  <Button
+                    bg="brand.primary"
+                    color="white"
+                    _hover={{ bg: "brand.secondary" }}
+                    onClick={() => navigate("/attest")}
+                  >
+                    Make New Attestation
+                  </Button>
+                </Flex>
+                <Box overflowX="auto">
+                  <Table variant="simple" size="md" mt={4} minWidth="600px">
+                    <Thead bg="brand.primary">
+                      <Tr>
+                        <Th color="white" textAlign="center" width="10%">
+                          ID
+                        </Th>
+                        <Th color="white" textAlign="center" width="20%">
+                          Schema ID
+                        </Th>
+                        <Th color="white" textAlign="center" width="20%">
+                          Subject
+                        </Th>
+                        <Th color="white" textAlign="center" width="30%">
+                          Issuer
+                        </Th>
+                        <Th color="white" textAlign="center" width="20%">
+                          Number of Fields
+                        </Th>
+                      </Tr>
+                    </Thead>
+                    <Tbody>
+                      {!hasFetchedAttestations ? (
+                        <Tr>
+                          <Td colSpan={5} textAlign="center">
+                            <Spinner size="xl" color="pink.500" />
+                          </Td>
+                        </Tr>
+                      ) : sortedAttestations.length > 0 ? (
+                        sortedAttestations.map((attestation) => (
+                          <Tr key={attestation.id}>
+                            <Td textAlign="center">{attestation.id}</Td>
+                            <Td textAlign="center">{attestation.schemaId}</Td>
+                            <Td textAlign="center">{attestation.subject}</Td>
+                            <Td textAlign="center" whiteSpace="nowrap">
+                              You
+                              <IconButton
+                                aria-label="Copy Issuer Address"
+                                icon={<CopyIcon />}
+                                size="xs"
+                                ml={2}
+                                onClick={() =>
+                                  copyToClipboard(
+                                    encodeAddress(
+                                      decodeAddress(attestation.issuer)
+                                    )
+                                  )
+                                }
+                              />
+                            </Td>
+                            <Td textAlign="center">
+                              {attestation.data.length}
+                            </Td>
+                          </Tr>
+                        ))
+                      ) : (
+                        <Tr>
+                          <Td colSpan={5} textAlign="center">
+                            Here you will find your created attestations. You
+                            can register new ones and leave a record of your
+                            data.
+                          </Td>
+                        </Tr>
+                      )}
+                    </Tbody>
+                  </Table>
+                </Box>
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
         </Box>
       </Flex>
-
-      <Footer />
     </Flex>
   );
 }

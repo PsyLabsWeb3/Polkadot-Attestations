@@ -14,11 +14,10 @@ import {
   TabPanels,
   Tab,
   TabPanel,
+  Spinner,
 } from "@chakra-ui/react";
 import { CopyIcon } from "@chakra-ui/icons";
-import Header from "../templates/Header/Header";
-import Footer from "../pages/footer";
-import SearchById, { SearchType } from "../../components/pages/SearchById";
+import SearchById, { SearchType } from "./SearchById";
 import { useEffect, useState } from "react";
 import { useWallet } from "../contexts/AccountContext";
 import { AttestationData, SchemaData, useApi } from "../contexts/ApiContext";
@@ -73,34 +72,24 @@ function Scan() {
     }
   }, [api, hasFetchedSchemas, hasFetchedAttestations]);
 
-  const handleAttestationSearchResult = (result: any) => {
-    if (result) {
-      setAttestations([result]);
-    } else {
-      setAttestations(attestations);
-    }
-  };
-
-  const handleSchemaSearchResult = (result: any) => {
-    if (result) {
-      setSchemas([result]);
-    } else {
-      setSchemas(schemas);
-    }
-  };
-
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
   };
 
+  const sortByIdDescending = (
+    a: { id?: string },
+    b: { id?: string }
+  ): number => {
+    const idA = a.id ? parseInt(a.id, 10) : 0;
+    const idB = b.id ? parseInt(b.id, 10) : 0;
+    return idB - idA;
+  };
+
+  const sortedSchemas = schemas.slice().sort(sortByIdDescending);
+  const sortedAttestations = attestations.slice().sort(sortByIdDescending);
+
   return (
     <Flex direction="column" w="100%" minH="100vh" bg="brand.background">
-      {/* Header */}
-      <Box w="100%">
-        <Header />
-      </Box>
-
-      {/* Main Content with Tabs */}
       <Flex justify="center" flex="1" p={10} gap={10} wrap="wrap">
         <Box
           w={{ base: "100%", md: "90%" }}
@@ -113,8 +102,9 @@ function Scan() {
             variant="soft-rounded"
             colorScheme="pink"
             sx={{
-              ".chakra-tabs__tab:focus": {
-                outline: "none",
+              ".chakra-tabs__tab:focus": { outline: "none" },
+              ".chakra-tabs__tab[aria-selected=true]": {
+                color: "brand.primary",
               },
             }}
           >
@@ -123,20 +113,19 @@ function Scan() {
               <Tab>Attestations</Tab>
             </TabList>
             <TabPanels>
-              {/* Schemas Tab */}
               <TabPanel>
                 <Heading as="h3" mb={4} color="brand.black">
                   Schemas
                 </Heading>
-                {/* Search Schemas */}
                 <SearchById
                   searchType={SearchType.SCHEMA}
-                  onSearchResult={handleSchemaSearchResult}
+                  onSearchResult={(result) =>
+                    result ? setSchemas([result]) : setSchemas(schemas)
+                  }
                 />
-                {/* Schemas Table */}
                 <Box overflowX="auto">
                   <Table variant="simple" size="md" mt={4} minWidth="600px">
-                    <Thead bg="pink.500">
+                    <Thead bg="brand.primary">
                       <Tr>
                         <Th color="white" textAlign="center" width="10%">
                           ID
@@ -153,48 +142,64 @@ function Scan() {
                       </Tr>
                     </Thead>
                     <Tbody>
-                      {schemas.map((schema) => (
-                        <Tr key={schema.id}>
-                          <Td textAlign="center">{schema.id}</Td>
-                          <Td textAlign="center" whiteSpace="nowrap">
-                            {formatAccount(
-                              encodeAddress(decodeAddress(schema.issuer))
-                            )}
-                            <IconButton
-                              aria-label="Copy Issuer Address"
-                              icon={<CopyIcon />}
-                              size="xs"
-                              ml={2}
-                              onClick={() =>
-                                copyToClipboard(
-                                  encodeAddress(decodeAddress(schema.issuer))
-                                )
-                              }
-                            />
+                      {!hasFetchedSchemas ? (
+                        <Tr>
+                          <Td colSpan={4} textAlign="center">
+                            <Spinner size="xl" color="pink.500" />
                           </Td>
-                          <Td textAlign="center">{schema.name}</Td>
-                          <Td textAlign="center">{schema.fields.length}</Td>
                         </Tr>
-                      ))}
+                      ) : sortedSchemas.length > 0 ? (
+                        sortedSchemas.map((schema) => (
+                          <Tr key={schema.id}>
+                            <Td textAlign="center">{schema.id}</Td>
+                            <Td textAlign="center">{schema.name}</Td>
+                            <Td textAlign="center" whiteSpace="nowrap">
+                              {formatAccount(
+                                encodeAddress(decodeAddress(schema.issuer))
+                              )}
+                              <IconButton
+                                aria-label="Copy Issuer Address"
+                                icon={<CopyIcon />}
+                                size="xs"
+                                ml={2}
+                                onClick={() =>
+                                  copyToClipboard(
+                                    encodeAddress(decodeAddress(schema.issuer))
+                                  )
+                                }
+                              />
+                            </Td>
+                            <Td textAlign="center">{schema.fields.length}</Td>
+                          </Tr>
+                        ))
+                      ) : (
+                        <Tr>
+                          <Td colSpan={4} textAlign="center">
+                            Here you will find your created schemas. You can use
+                            the ID to create attestations based on them.
+                          </Td>
+                        </Tr>
+                      )}
                     </Tbody>
                   </Table>
                 </Box>
               </TabPanel>
 
-              {/* Attestations Tab */}
               <TabPanel>
                 <Heading as="h3" mb={4} color="brand.black">
                   Attestations
                 </Heading>
-                {/* Search Attestations */}
                 <SearchById
                   searchType={SearchType.ATTESTATION}
-                  onSearchResult={handleAttestationSearchResult}
+                  onSearchResult={(result) =>
+                    result
+                      ? setAttestations([result])
+                      : setAttestations(attestations)
+                  }
                 />
-                {/* Attestations Table */}
                 <Box overflowX="auto">
                   <Table variant="simple" size="md" mt={4} minWidth="600px">
-                    <Thead bg="pink.500">
+                    <Thead bg="brand.primary">
                       <Tr>
                         <Th color="white" textAlign="center" width="10%">
                           ID
@@ -214,32 +219,50 @@ function Scan() {
                       </Tr>
                     </Thead>
                     <Tbody>
-                      {attestations.map((attestation) => (
-                        <Tr key={attestation.id}>
-                          <Td textAlign="center">{attestation.id}</Td>
-                          <Td textAlign="center">{attestation.schemaId}</Td>
-                          <Td textAlign="center">{attestation.subject}</Td>
-                          <Td textAlign="center" whiteSpace="nowrap">
-                            {formatAccount(
-                              encodeAddress(decodeAddress(attestation.issuer))
-                            )}
-                            <IconButton
-                              aria-label="Copy Issuer Address"
-                              icon={<CopyIcon />}
-                              size="xs"
-                              ml={2}
-                              onClick={() =>
-                                copyToClipboard(
-                                  encodeAddress(
-                                    decodeAddress(attestation.issuer)
-                                  )
-                                )
-                              }
-                            />
+                      {!hasFetchedAttestations ? (
+                        <Tr>
+                          <Td colSpan={5} textAlign="center">
+                            <Spinner size="xl" color="pink.500" />
                           </Td>
-                          <Td textAlign="center">{attestation.data.length}</Td>
                         </Tr>
-                      ))}
+                      ) : sortedAttestations.length > 0 ? (
+                        sortedAttestations.map((attestation) => (
+                          <Tr key={attestation.id}>
+                            <Td textAlign="center">{attestation.id}</Td>
+                            <Td textAlign="center">{attestation.schemaId}</Td>
+                            <Td textAlign="center">{attestation.subject}</Td>
+                            <Td textAlign="center" whiteSpace="nowrap">
+                              {formatAccount(
+                                encodeAddress(decodeAddress(attestation.issuer))
+                              )}
+                              <IconButton
+                                aria-label="Copy Issuer Address"
+                                icon={<CopyIcon />}
+                                size="xs"
+                                ml={2}
+                                onClick={() =>
+                                  copyToClipboard(
+                                    encodeAddress(
+                                      decodeAddress(attestation.issuer)
+                                    )
+                                  )
+                                }
+                              />
+                            </Td>
+                            <Td textAlign="center">
+                              {attestation.data.length}
+                            </Td>
+                          </Tr>
+                        ))
+                      ) : (
+                        <Tr>
+                          <Td colSpan={5} textAlign="center">
+                            Here you will find your created attestations. You
+                            can register new ones and leave a record of your
+                            data.
+                          </Td>
+                        </Tr>
+                      )}
                     </Tbody>
                   </Table>
                 </Box>
@@ -248,11 +271,6 @@ function Scan() {
           </Tabs>
         </Box>
       </Flex>
-
-      {/* Footer */}
-      <Box w="100%">
-        <Footer />
-      </Box>
     </Flex>
   );
 }

@@ -1,7 +1,13 @@
-import { Box, Heading, Flex, VStack, Button, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  Flex,
+  VStack,
+  Button,
+  Text,
+  Spinner,
+} from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import Header from "../templates/Header/Header";
-import Footer from "./footer";
 import { useEffect, useState } from "react";
 import { SchemaData, useApi } from "../contexts/ApiContext";
 import { useWallet } from "../contexts/AccountContext";
@@ -12,13 +18,15 @@ import SearchById, { SearchType } from "./SearchById";
 function SelectSchemaToAttest() {
   const [schemasList, setSchemasList] = useState<SchemaData[]>([]);
   const [hasFetchedSchemas, setHasFetchedSchemas] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const { getAllByIssuer, isQueryLoading, api } = useApi();
+  const { getAllByIssuer, api } = useApi();
   const { selectedAccount } = useWallet();
   const navigate = useNavigate();
 
   useEffect(() => {
     setHasFetchedSchemas(false);
+    setIsLoading(true);
   }, [selectedAccount]);
 
   useEffect(() => {
@@ -31,9 +39,11 @@ function SelectSchemaToAttest() {
             hexAccount
           );
           setSchemasList(schemas);
-          setHasFetchedSchemas(true);
         } catch (error) {
           console.error("Error fetching schemas:", error);
+        } finally {
+          setHasFetchedSchemas(true);
+          setIsLoading(false);
         }
       }
     };
@@ -51,11 +61,6 @@ function SelectSchemaToAttest() {
       bg="brand.background"
       color="brand.black"
     >
-      {/* Header section */}
-      <Box w="100%">
-        <Header />
-      </Box>
-
       {/* Main content */}
       <Flex
         justify="center"
@@ -77,9 +82,9 @@ function SelectSchemaToAttest() {
             Choose your schema to attest
           </Heading>
 
-          {/* Display loading message while schemas are being fetched */}
-          {isQueryLoading ? (
-            <Text>Loading schemas...</Text>
+          {/* Display loading spinner while schemas are being fetched */}
+          {isLoading ? (
+            <Spinner size="xl" color="pink.500" />
           ) : (
             <VStack spacing={4} w="100%">
               {/* Display the list of available schemas */}
@@ -125,11 +130,6 @@ function SelectSchemaToAttest() {
           </Button>
         </Box>
       </Flex>
-
-      {/* Footer section */}
-      <Box w="100%">
-        <Footer />
-      </Box>
     </Flex>
   );
 }

@@ -73,7 +73,7 @@ export const ApiProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     const initializeApi = async () => {
-      const wsProvider = new WsProvider("ws://127.0.0.1:36903");
+      const wsProvider = new WsProvider("ws://127.0.0.1:34443");
       const apiInstance = await ApiPromise.create({ provider: wsProvider });
       setApi(apiInstance);
     };
