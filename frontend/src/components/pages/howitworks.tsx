@@ -1,114 +1,83 @@
-import { Box, Heading, Flex, Text, Button, IconButton } from "@chakra-ui/react";
-import { useState } from "react";
-import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
-import { useNavigate } from "react-router-dom";
+import { Box, Heading, Flex, Text, Image } from "@chakra-ui/react";
 
 function HowItWorks() {
-  const [currentSlide, setCurrentSlide] = useState(0); // State to track the current slide
-  const navigate = useNavigate();
-
-  // Array of slides for the carousel
-  const slides = [
-    {
-      title: "Create a Schema",
-      image: "/path/to/image1.png",
-      description:
-        "Description for creating a schema. You can explain the process here.",
-      buttonLabel: "Create New Schema",
-      buttonRoute: "/create-schema",
-    },
-    {
-      title: "Make an Attestation",
-      image: "/path/to/image2.png",
-      description:
-        "Description for making an attestation. You can explain the process here.",
-      buttonLabel: "Make Attestation",
-      buttonRoute: "/attestations",
-    },
-  ];
-
-  // Function to handle the next slide
-  const handleNext = () => {
-    setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1)); // Loop back to the first slide after the last
-  };
-
-  // Function to handle the previous slide
-  const handlePrevious = () => {
-    setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1)); // Loop back to the last slide when on the first
-  };
-
   return (
     <Flex
       direction="column"
       w="100%"
       minH="100vh"
-      alignItems="center"
+      p={10}
       justifyContent="center"
-      bg="#000000" // Black background
-      color="#FFFFFF" // White text color
+      alignItems="center"
+      bgGradient="linear(135deg, #FFFFFF, #FFD4E2)"
+      color="#000"  
     >
-      <Heading as="h2" mb={6}>
-        How it Works
-      </Heading>
-
-      {/* Container divided into 3 sections */}
-      <Flex
-        w="100%"
-        maxW="1200px"
-        h="60vh"
-        justifyContent="space-between"
-        alignItems="center"
+      {/* Contenedor principal con dos columnas */}
+      <Flex 
+        w="100%" 
+        maxW="1200px" 
+        justifyContent="space-between" 
+        alignItems="center" 
+        gap={10}  // Añade espacio entre las columnas
       >
-        {/* Left arrow */}
-        <IconButton
-          aria-label="Previous slide"
-          icon={<ChevronLeftIcon />}
-          size="lg"
-          bg="transparent"
-          color="brand.secondary"
-          _hover={{ bg: "transparent" }}
-          onClick={handlePrevious} // Go to the previous slide
-        />
-
-        {/* Central section containing the carousel */}
-        <Box flex="2" textAlign="center">
-          <Box textAlign="center" w="100%" p={6}>
-            {/* Image placeholder */}
-            <Box h="200px" mb={4}>
-              <Text>Image Carousel</Text>
-            </Box>
-
-            {/* Slide title */}
-            <Heading as="h3" fontSize="xl" mb={4}>
-              {slides[currentSlide].title}
-            </Heading>
-
-            {/* Slide description */}
-            <Text mb={6}>{slides[currentSlide].description}</Text>
-
-            {/* Conditional button for navigating to different routes */}
-            <Button
-              bg="brand.primary"
-              color="white"
-              _hover={{ bg: "brand.secondary" }}
-              border="none"
-              onClick={() => navigate(slides[currentSlide].buttonRoute)} // Navigate to the specified route
-            >
-              {slides[currentSlide].buttonLabel}
-            </Button>
+        
+        {/* Columna izquierda con la imagen */}
+        <Flex flex="1" direction="column" alignItems="center" textAlign="center">
+          {/* Espacio para la imagen */}
+          <Box h="400px" w="300px" display="flex" justifyContent="center" alignItems="center">
+            <Image src="/src/assets/images/check.png" alt="Check Graphic" />
           </Box>
-        </Box>
+        </Flex>
 
-        {/* Right arrow */}
-        <IconButton
-          aria-label="Next slide"
-          icon={<ChevronRightIcon />}
-          size="lg"
-          bg="transparent"
-          color="brand.secondary"
-          _hover={{ bg: "transparent" }}
-          onClick={handleNext} // Go to the next slide
-        />
+        {/* Columna derecha con los textos explicativos */}
+        <Flex flex="1" direction="column" justifyContent="center" textAlign="left">
+          
+          {/* Título "How it Works" */}
+          <Heading as="h3" mb={10} textAlign="left">
+            How it Works
+          </Heading>
+
+          {/* Paso 1: Overview */}
+          <Flex mb={8} direction="column">
+            <Text fontSize="xl" fontWeight="bold" mb={2}>
+            PolkAttest: The Ledger for Verifiable Off-Chain Events
+            </Text>
+            <Text>
+              Transforms off-chain events into verifiable, reliable, and permanent records. We bridge the gap between the physical world and the blockchain, ensuring data integrity and authenticity in every transaction.
+            </Text>
+          </Flex>
+
+          {/* Paso 2: Create a Schema */}
+          <Flex mb={8} direction="column">
+            <Text fontSize="xl" fontWeight="bold" mb={2}>
+              1. Create a Schema
+            </Text>
+            <Text>
+              Schemas define the structure of data to be attested. In this step, you can create a schema by specifying the fields and types required for your attestation. Each schema is stored immutably on-chain, allowing others to generate attestations based on your defined format.
+            </Text>
+          </Flex>
+
+          {/* Paso 3: Make an Attestation */}
+          <Flex mb={8} direction="column">
+            <Text fontSize="xl" fontWeight="bold" mb={2}>
+              2. Make an Attestation
+            </Text>
+            <Text>
+              An attestation is the verification of specific data based on a predefined schema. After creating or selecting a schema, you can attest real-world data. Attestations are cryptographically secure and permanently recorded on the blockchain, ensuring transparency and trust.
+            </Text>
+          </Flex>
+
+          {/* Paso 4: Retrieve and Verify */}
+          <Flex direction="column">
+            <Text fontSize="xl" fontWeight="bold" mb={2}>
+              3. Retrieve and Verify
+            </Text>
+            <Text>
+              Once the attestation is made, it is stored immutably on the blockchain, ensuring that the data cannot be tampered with. You or others can retrieve and verify the attested data at any point, ensuring trust and transparency in all transactions.
+            </Text>
+          </Flex>
+
+        </Flex>
       </Flex>
     </Flex>
   );
