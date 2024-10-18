@@ -38,21 +38,25 @@ use frame_support::{
     parameter_types,
     traits::{
         ConstBool, ConstU32, ConstU64, ConstU8, EitherOfDiverse, TransformOrigin, VariantCountOf,
+        tokens::{Pay, PaymentStatus, ConversionFromAssetBalance}
     },
     weights::{ConstantMultiplier, Weight},
     PalletId,
+    pallet_prelude::EnsureOrigin,
+    error::BadOrigin,
 };
 use frame_system::{
     limits::{BlockLength, BlockWeights},
     EnsureRoot,
 };
+
 use pallet_xcm::{EnsureXcm, IsVoiceOfBody};
 use parachains_common::message_queue::{NarrowOriginToSibling, ParaIdToSibling};
 use polkadot_runtime_common::{
     xcm_sender::NoPriceForMessageDelivery, BlockHashCount, SlowAdjustingFeeUpdate,
 };
 use sp_consensus_aura::sr25519::AuthorityId as AuraId;
-use sp_runtime::{Perbill, Permill};
+use sp_runtime::{Perbill, Permill, AccountId32, DispatchError, traits::IdentityLookup};
 use sp_version::RuntimeVersion;
 use xcm::latest::prelude::BodyId;
 
@@ -166,7 +170,7 @@ impl pallet_balances::Config for Runtime {
     type DustRemoval = ();
     type ExistentialDeposit = ExistentialDeposit;
     type AccountStore = System;
-    type WeightInfo = (); // Configure based on benchmarking results.
+    type WeightInfo = pallet_balances::weights::SubstrateWeight<Runtime>; // Configure based on benchmarking results.
     type MaxReserves = ConstU32<50>;
     type ReserveIdentifier = [u8; 8];
     type RuntimeHoldReason = RuntimeHoldReason;
@@ -332,6 +336,57 @@ impl pallet_utility::Config for Runtime {
 	type WeightInfo = pallet_utility::weights::SubstrateWeight<Runtime>;
 }
 
+// EnsureRootWithBalance is a custom ensurance struct in order to implement the SpendOrigin trait in the Treasury Pallet configuration.
+
+pub struct EnsureRootWithBalance;
+
+impl EnsureOrigin<RuntimeOrigin> for EnsureRootWithBalance {
+    type Success = u128;
+
+    fn ensure_origin(origin: RuntimeOrigin) -> Result<Self::Success, BadOrigin> {
+        match origin {
+            _runtime_origin => {
+                Ok(0)
+            }
+        }
+    }
+
+    // ToDo: Try origin functionality.
+    fn try_origin(_: RuntimeOrigin) -> Result<<Self as EnsureOrigin<RuntimeOrigin>>::Success, RuntimeOrigin> { todo!() }
+}
+
+// MyPaymaster is a custom payment struct in order to implement the Paymaster trait in the Treasury Pallet configuration.
+
+pub struct MyPaymaster;
+
+impl Pay for MyPaymaster {
+    type Beneficiary = AccountId;
+    type AssetKind = ();
+    type Balance = u128;
+    type Id = ();
+    type Error = DispatchError;
+
+    // ToDo: pay logic. (pallet_balances::transfer_allow_death)
+    fn pay(_beneficiary: &Self::Beneficiary, _asset_kind: Self::AssetKind, _amount: Self::Balance) -> Result<(), Self::Error> {
+        Ok(())
+    }
+
+    // ToDo: Check payment functionality.
+    fn check_payment(_: <Self as Pay>::Id) -> PaymentStatus { todo!() }
+}
+
+// MyBalanceConverter is a balance converter struct in order to implement the BalanceConverter trait in the Treasury Pallet configuration.
+
+pub struct MyBalanceConverter;
+
+impl ConversionFromAssetBalance<u128, (), u128> for MyBalanceConverter {
+    type Error = DispatchError;
+
+    fn from_asset_balance(asset_balance: u128, _asset_id: ()) -> Result<u128, Self::Error> {
+        Ok(asset_balance)
+    }
+}
+
 impl pallet_treasury::Config for Runtime {
     type RuntimeEvent = RuntimeEvent;
     type Currency = Balances;
@@ -342,13 +397,12 @@ impl pallet_treasury::Config for Runtime {
     type BurnDestination = ();
     type SpendFunds = ();
     type MaxApprovals = MaxApprovals;
-    //type SpendOrigin = ();
+    type SpendOrigin = EnsureRootWithBalance;
     type AssetKind = ();
     type Beneficiary = AccountId;
-    //type BeneficiaryLookup = ();
-    //type Paymaster = ();
-    type BalanceConverter = ();
+    type BeneficiaryLookup = IdentityLookup<AccountId32>;
+    type Paymaster = MyPaymaster;
+    type BalanceConverter = MyBalanceConverter;
     type PayoutPeriod = SpendPeriod;
 	type WeightInfo = pallet_treasury::weights::SubstrateWeight<Runtime>;
 }
-
