@@ -38,7 +38,7 @@ function Header() {
         fontWeight="bold"
         _hover={{ textDecoration: "none" }}
       >
-        PolkAttest
+        Polkattest
       </Link>
 
       {/* Navigation links */}
@@ -57,7 +57,7 @@ function Header() {
         )}
 
         <Link
-          href="/userdashboard"
+          href="/user-dashboard"
           fontSize="lg"
           fontWeight="medium"
           color="gray.500"

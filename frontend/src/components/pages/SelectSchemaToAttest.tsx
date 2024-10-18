@@ -7,7 +7,7 @@ import { SchemaData, useApi } from "../contexts/ApiContext";
 import { useWallet } from "../contexts/AccountContext";
 import { decodeAddress } from "@polkadot/util-crypto";
 import { u8aToHex } from "@polkadot/util";
-import SearchSchemasById from "./SearchSchemasById";
+import SearchById, { SearchType } from "./SearchById";
 
 function SelectSchemaToAttest() {
   const [schemasList, setSchemasList] = useState<SchemaData[]>([]);
@@ -106,10 +106,11 @@ function SelectSchemaToAttest() {
               )}
             </VStack>
           )}
-
+          <Text mb={2} fontWeight="bold" color="gray.700" marginTop={12}>
+            Search for an existing Schema to Attest
+          </Text>
           {/* Component for searching schemas by ID */}
-          <SearchSchemasById />
-
+          <SearchById searchType={SearchType.SCHEMA} />
           {/* Button to navigate to the page for creating a new schema */}
           <Button
             mt={8}

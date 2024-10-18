@@ -48,7 +48,7 @@ interface ApiContextType {
   getAllByIssuer: (
     queryFunction: () => Promise<[StorageKey, Option<Codec>][]>,
     issuerAddress: string
-  ) => Promise<SchemaData[]>;
+  ) => Promise<any[]>;
 }
 
 const ApiContext = createContext<ApiContextType>({
@@ -73,7 +73,7 @@ export const ApiProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     const initializeApi = async () => {
-      const wsProvider = new WsProvider("ws://127.0.0.1:39865");
+      const wsProvider = new WsProvider("ws://127.0.0.1:36903");
       const apiInstance = await ApiPromise.create({ provider: wsProvider });
       setApi(apiInstance);
     };
@@ -89,7 +89,9 @@ export const ApiProvider: React.FC<{ children: React.ReactNode }> = ({
       setTransactionLoading(true);
       const extensions = await web3Enable("Polkattest");
       if (extensions.length === 0) {
-        throw new Error("No extension found. Please install Polkadot{.js}.");
+        throw new Error(
+          "No extension found. Please install Polkadot{.js} or Talisman."
+        );
       }
       const signer = (await web3FromAddress(selectedAccount)).signer as Signer;
       const unsub = await transaction(...params).signAndSend(
