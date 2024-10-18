@@ -48,7 +48,7 @@ interface ApiContextType {
   getAllByIssuer: (
     queryFunction: () => Promise<[StorageKey, Option<Codec>][]>,
     issuerAddress: string
-  ) => Promise<SchemaData[]>;
+  ) => Promise<any[]>;
 }
 
 const ApiContext = createContext<ApiContextType>({
