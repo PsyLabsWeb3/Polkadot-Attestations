@@ -346,7 +346,7 @@ impl EnsureOrigin<RuntimeOrigin> for EnsureRootWithBalance {
     fn ensure_origin(origin: RuntimeOrigin) -> Result<Self::Success, BadOrigin> {
         match origin {
             _runtime_origin => {
-                Ok(0)
+                Ok(u128::MAX)
             }
         }
     }
