@@ -342,6 +342,9 @@ mod runtime {
 
     #[runtime::pallet_index(42)]
 	pub type Utility = pallet_utility;
+
+    #[runtime::pallet_index(43)]
+	pub type Treasury = pallet_treasury;
 }
 
 cumulus_pallet_parachain_system::register_validate_block! {
