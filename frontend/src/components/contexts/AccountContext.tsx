@@ -5,7 +5,11 @@ import React, {
   ReactNode,
   useEffect,
 } from "react";
-import { web3Accounts, web3Enable } from "@polkadot/extension-dapp";
+import {
+  web3Accounts,
+  web3Enable,
+  web3AccountsSubscribe,
+} from "@polkadot/extension-dapp";
 
 // Define the type for an account object
 interface Account {
@@ -20,12 +24,13 @@ interface Account {
 interface WalletContextType {
   allAccounts: Account[];
   selectedAccount: string | null;
+  isWalletConnected: boolean;
   handleConnectWallet: () => void;
   handleSelectAccount: (event: React.ChangeEvent<HTMLSelectElement>) => void;
   formatAccount: (account: string) => string;
 }
 
-//Name of dapp
+// Name of dapp
 const NAME = "PolkAttest";
 
 // Create the context with a default value
@@ -46,15 +51,23 @@ const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
     sessionStorage.getItem("selectedAccount") || null
   );
 
+  const [isWalletConnected, setIsWalletConnected] = useState<boolean>(
+    allAccounts.length > 0
+  );
+
   const handleConnectWallet = async () => {
     const extensions = await web3Enable(NAME);
 
-    if (!extensions) {
-      throw new Error("No wallet installed found");
+    if (!extensions.length) {
+      alert(
+        "Polkadot JS Extension is not installed. Please install it to continue."
+      );
+      return;
     }
 
     const localAccounts = await web3Accounts();
     setAllAccounts(localAccounts);
+    setIsWalletConnected(true);
     sessionStorage.setItem("allAccounts", JSON.stringify(localAccounts));
   };
 
@@ -71,6 +84,45 @@ const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
     setSelectedAccount(account.address);
     sessionStorage.setItem("selectedAccount", account.address);
   };
+
+  // Subscribe to account changes in the Polkadot extension
+  useEffect(() => {
+    const subscribeToAccountChanges = async () => {
+      await web3Enable(NAME);
+
+      const unsubscribe = await web3AccountsSubscribe((newAccounts) => {
+        setAllAccounts(newAccounts);
+        sessionStorage.setItem("allAccounts", JSON.stringify(newAccounts));
+
+        if (
+          selectedAccount &&
+          !newAccounts.some((account) => account.address === selectedAccount)
+        ) {
+          const previousAccount = sessionStorage.getItem("selectedAccount");
+
+          if (
+            previousAccount &&
+            newAccounts.some((account) => account.address === previousAccount)
+          ) {
+            setSelectedAccount(previousAccount);
+          } else {
+            setSelectedAccount(null);
+            sessionStorage.removeItem("selectedAccount");
+          }
+        }
+
+        if (newAccounts.length === 0) {
+          setIsWalletConnected(false);
+          sessionStorage.removeItem("allAccounts");
+          sessionStorage.removeItem("selectedAccount");
+        }
+      });
+
+      return () => unsubscribe();
+    };
+
+    subscribeToAccountChanges();
+  }, [selectedAccount]);
 
   useEffect(() => {
     if (selectedAccount) {
@@ -90,6 +142,7 @@ const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
       value={{
         allAccounts,
         selectedAccount,
+        isWalletConnected,
         handleConnectWallet,
         handleSelectAccount,
         formatAccount,
