@@ -23,7 +23,7 @@ function MainSection() {
     >
       <Box textAlign="center" zIndex="1">
         <Heading fontSize="4rem" color="white">
-          PolkAttest Chain
+          Polkattest Chain
         </Heading>
         <Heading as="h2" fontSize="2rem" color="white" mt="1rem">
           Substrate-based Attestation Blockchain
