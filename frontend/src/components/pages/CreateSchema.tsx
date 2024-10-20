@@ -245,10 +245,12 @@ function CreateSchema() {
             </Button>
           </HStack>
 
+          {/* Button to submit the form */}
           <Button
             mt="2rem"
             bg="brand.primary"
             color="white"
+            w={{ base: "100%", md: "300px" }}
             _hover={{ bg: "brand.secondary" }}
             border="none"
             onClick={handleInsertSchema}
@@ -259,9 +261,7 @@ function CreateSchema() {
               ) : undefined
             }
           >
-            {isSubmitting || isTransactionLoading
-              ? "Submitting..."
-              : "Create Schema"}
+            Create Schema
           </Button>
         </Box>
       </Flex>
