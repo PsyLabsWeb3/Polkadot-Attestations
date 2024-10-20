@@ -12,7 +12,6 @@ import {
   web3AccountsSubscribe,
 } from "@polkadot/extension-dapp";
 
-// Define the type for an account object
 interface Account {
   address: string;
   meta: {
@@ -21,7 +20,6 @@ interface Account {
   };
 }
 
-// Define the types for the context
 interface WalletContextType {
   allAccounts: Account[];
   selectedAccount: string | null;
@@ -40,11 +38,23 @@ interface WalletProviderProps {
 }
 
 const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
-  const [allAccounts, setAllAccounts] = useState<Account[]>([]);
-  const [selectedAccount, setSelectedAccount] = useState<string | null>(null);
-  const [isWalletConnected, setIsWalletConnected] = useState<boolean>(false);
+  const [allAccounts, setAllAccounts] = useState<Account[]>(() => {
+    const storedAccounts = sessionStorage.getItem("allAccounts");
+    return storedAccounts ? JSON.parse(storedAccounts) : [];
+  });
+
+  const [selectedAccount, setSelectedAccount] = useState<string | null>(() => {
+    const storedSelectedAccount = sessionStorage.getItem("selectedAccount");
+    return storedSelectedAccount || null;
+  });
+
+  const [isWalletConnected, setIsWalletConnected] = useState<boolean>(() => {
+    return sessionStorage.getItem("allAccounts") ? true : false;
+  });
 
   const isSubscribed = useRef(false);
+
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleConnectWallet = async () => {
     try {
@@ -78,28 +88,53 @@ const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    if (isSubscribed.current) return;
+    if (isSubscribed.current) {
+      return;
+    }
 
     const subscribeToAccountChanges = async () => {
       try {
         await web3Enable(NAME);
         const unsubscribe = await web3AccountsSubscribe((newAccounts) => {
-          const hasChanged =
-            JSON.stringify(newAccounts) !==
-            sessionStorage.getItem("allAccounts");
-
-          if (hasChanged) {
-            setAllAccounts(newAccounts);
-            sessionStorage.setItem("allAccounts", JSON.stringify(newAccounts));
-
-            if (!newAccounts.some((acc) => acc.address === selectedAccount)) {
-              const firstAccount = newAccounts[0]?.address || null;
-              setSelectedAccount(firstAccount);
-              sessionStorage.setItem("selectedAccount", firstAccount || "");
-            }
-
-            setIsWalletConnected(newAccounts.length > 0);
+          if (debounceTimeoutRef.current) {
+            clearTimeout(debounceTimeoutRef.current);
           }
+
+          debounceTimeoutRef.current = setTimeout(() => {
+            const storedAccounts = JSON.parse(
+              sessionStorage.getItem("allAccounts") || "[]"
+            );
+
+            const accountsAreEqual = (
+              accounts1: Account[],
+              accounts2: Account[]
+            ) => {
+              if (accounts1.length !== accounts2.length) {
+                return false;
+              }
+              const addresses1 = accounts1.map((acc) => acc.address).sort();
+              const addresses2 = accounts2.map((acc) => acc.address).sort();
+              return addresses1.every((addr, idx) => addr === addresses2[idx]);
+            };
+
+            const hasChanged = !accountsAreEqual(newAccounts, storedAccounts);
+
+            if (hasChanged) {
+              setAllAccounts(newAccounts);
+              sessionStorage.setItem(
+                "allAccounts",
+                JSON.stringify(newAccounts)
+              );
+
+              if (!newAccounts.some((acc) => acc.address === selectedAccount)) {
+                const firstAccount = newAccounts[0]?.address || null;
+                setSelectedAccount(firstAccount);
+                sessionStorage.setItem("selectedAccount", firstAccount || "");
+              }
+
+              setIsWalletConnected(newAccounts.length > 0);
+            }
+          }, 500);
         });
 
         isSubscribed.current = true;
@@ -114,7 +149,7 @@ const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
     };
 
     subscribeToAccountChanges();
-  }, [selectedAccount]);
+  }, []);
 
   const formatAccount = (account: string) =>
     account.length > 4 ? `...${account.slice(-4)}` : account;

@@ -259,9 +259,7 @@ function CreateSchema() {
               ) : undefined
             }
           >
-            {isSubmitting || isTransactionLoading
-              ? "Submitting..."
-              : "Create Schema"}
+            Create Schema
           </Button>
         </Box>
       </Flex>
