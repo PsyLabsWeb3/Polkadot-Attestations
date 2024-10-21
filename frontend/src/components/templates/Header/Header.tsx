@@ -18,7 +18,7 @@ function Header() {
 
   const location = useLocation();
   const currentPath = location.pathname;
-  const buttonAndSelectWidth = "11rem";
+  const buttonAndSelectWidth = "12rem";
 
   return (
     <Flex
@@ -58,7 +58,7 @@ function Header() {
         )}
 
         <Link
-          href="/userdashboard"
+          href="/user-dashboard"
           fontSize="lg"
           fontWeight="medium"
           color="gray.500"
@@ -109,20 +109,9 @@ function Header() {
         {isWalletConnected && !selectedAccount && allAccounts.length > 0 ? (
           <strong>Please select your account.</strong>
         ) : null}
-        {isWalletConnected && allAccounts.length === 0 ? (
-          <strong>Account not connected.</strong>
-        ) : null}
       </Text>
 
-      {/* Show "Connect Wallet" button only if no wallet is connected */}
-      {!isWalletConnected && (
-        <Button width={buttonAndSelectWidth} onClick={handleConnectWallet}>
-          Connect Wallet
-        </Button>
-      )}
-
-      {/* Dropdown for selecting wallet account only if wallet is connected */}
-      {isWalletConnected && (
+      {isWalletConnected && allAccounts.length ? (
         <Select
           onChange={handleSelectAccount}
           bgColor="gray.300"
@@ -153,6 +142,10 @@ function Header() {
               </option>
             ))}
         </Select>
+      ) : (
+        <Button width={buttonAndSelectWidth} onClick={handleConnectWallet}>
+          Connect Wallet
+        </Button>
       )}
     </Flex>
   );

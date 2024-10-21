@@ -16,8 +16,6 @@ import {
   AlertDescription,
   Select,
 } from "@chakra-ui/react";
-import Header from "../templates/Header/Header";
-import Footer from "./footer";
 import {
   useApi,
   AttestationData,
@@ -33,7 +31,7 @@ type FormValues = {
 function Attest() {
   const { id } = useParams<{ id: string }>();
   const [schema, setSchema] = useState<SchemaData | null>(null);
-  const [fields, setFields] = useState<FormValues>({});
+  const [fields, setFields] = useState<FormValues>({ subject: "" });
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
@@ -58,7 +56,7 @@ function Attest() {
         );
         if (fetchedSchema) {
           setSchema(fetchedSchema);
-          const initialValues: FormValues = {};
+          const initialValues: FormValues = { subject: "" };
           fetchedSchema.fields.forEach((field: SchemaField) => {
             initialValues[field.name] = "";
           });
@@ -81,10 +79,14 @@ function Attest() {
     fieldName: string
   ) => {
     const { value } = e.target;
-    setFields((prevValues) => ({
-      ...prevValues,
-      [fieldName]: value,
-    }));
+    // Regular expression to disallow special characters and accents
+    const regex = /^[a-zA-Z0-9 ]*$/;
+    if (regex.test(value)) {
+      setFields((prevValues) => ({
+        ...prevValues,
+        [fieldName]: value,
+      }));
+    }
   };
 
   const handleInsertAttestation = async () => {
@@ -98,6 +100,18 @@ function Attest() {
       return;
     }
 
+    // Ensure all fields are filled
+    for (const key in fields) {
+      if (
+        fields[key] === "" ||
+        fields[key] === null ||
+        fields[key] === undefined
+      ) {
+        setErrorMessage("All fields are required.");
+        return;
+      }
+    }
+
     const attestationData: SchemaField[] =
       schema?.fields.map((field) => ({
         name: field.name,
@@ -108,7 +122,7 @@ function Attest() {
     const attestation: AttestationData = {
       id: "",
       schemaId: Number(id),
-      subject: "",
+      subject: fields.subject as string,
       issuer: selectedAccount,
       data: attestationData,
     };
@@ -128,10 +142,6 @@ function Attest() {
 
   return (
     <Flex direction="column" w="100%" minH="100vh" bg="brand.background">
-      <Box w="100%">
-        <Header />
-      </Box>
-
       {(errorMessage || successMessage) && !isTransactionLoading && (
         <Flex
           position="fixed"
@@ -206,8 +216,19 @@ function Attest() {
 
               {/* Generate the form dynamically based on schema fields */}
               <form>
+                {/* Subject Field */}
+                <FormControl mb={4} isRequired>
+                  <FormLabel>Subject</FormLabel>
+                  <Input
+                    type="text"
+                    placeholder="Enter subject"
+                    value={fields.subject as string}
+                    onChange={(e) => handleChange(e, "subject")}
+                  />
+                </FormControl>
+
                 {schema.fields.map((field: SchemaField) => (
-                  <FormControl key={field.name} mb={4}>
+                  <FormControl key={field.name} mb={4} isRequired>
                     <FormLabel>{field.name}</FormLabel>
                     {/* Render Input or Select based on field type */}
                     {field.dataType === "string" ? (
@@ -275,10 +296,6 @@ function Attest() {
           )}
         </Box>
       </Flex>
-
-      <Box w="100%">
-        <Footer />
-      </Box>
     </Flex>
   );
 }
