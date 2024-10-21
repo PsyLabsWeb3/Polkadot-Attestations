@@ -6,6 +6,7 @@ import HowItWorks from "./howitworks";
 import Footer from "../pages/footer"; // Importación del Footer
 import Pallet from "../pages/pallet"
 import WhyAtt from "./whyatt";
+import Architecture from "./architecture";
 
 function Home() {
   return (
@@ -24,6 +25,11 @@ function Home() {
       {/* Sección de WhyAtt */}
       <Box >
         <WhyAtt />
+      </Box>
+
+      {/* Sección de Architecture */}
+      <Box >
+        <Architecture />
       </Box>
 
       {/* Sección de How it works */}
