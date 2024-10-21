@@ -76,7 +76,7 @@ impl WeightInfo for () {
 		//  Measured:  `0`
 		//  Estimated: `0`
 		// Minimum execution time: 8_000_000 picoseconds.
-		Weight::from_parts(9_000_000, 0)
+		Weight::from_parts(9000_000_000, 0)
 			.saturating_add(RocksDbWeight::get().writes(1_u64))
 	}
 }
