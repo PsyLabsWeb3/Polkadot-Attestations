@@ -73,7 +73,9 @@ export const ApiProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     const initializeApi = async () => {
-      const wsProvider = new WsProvider("ws://127.0.0.1:40187");
+      const wsProvider = new WsProvider(
+        import.meta.env.VITE_WS_RPC_ENDPOINT || ""
+      );
       const apiInstance = await ApiPromise.create({ provider: wsProvider });
       setApi(apiInstance);
     };
@@ -102,6 +104,7 @@ export const ApiProvider: React.FC<{ children: React.ReactNode }> = ({
             console.log(
               `Transaction included at blockHash ${status.asInBlock}`
             );
+            setTransactionLoading(false);
             if (dispatchError) {
               if (dispatchError.isModule) {
                 const decoded = api?.registry.findMetaError(
@@ -118,7 +121,6 @@ export const ApiProvider: React.FC<{ children: React.ReactNode }> = ({
               `Transaction finalized at blockHash ${status.asFinalized}`
             );
             unsub();
-            setTransactionLoading(false);
           }
         }
       );

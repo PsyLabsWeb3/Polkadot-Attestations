@@ -86,7 +86,7 @@ function DataSection() {
           <Heading fontSize="4rem" mb="1rem">
             {issuersAttestations}
           </Heading>
-          <Text fontSize="1.5rem">Unique Attestors</Text>
+          <Text fontSize="1.5rem">Unique Attesters</Text>
         </Box>
       </Flex>
 

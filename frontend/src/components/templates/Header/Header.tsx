@@ -1,6 +1,7 @@
-import { Link, Flex, Button, Select, Text } from "@chakra-ui/react";
+import { Link, Flex, Button, Select, Text, Image } from "@chakra-ui/react";
 import { useWallet } from "../../contexts/AccountContext";
 import { useLocation } from "react-router-dom";
+import icon from "../../../assets/images/polkattestlogo.png";
 
 interface Account {
   address: string;
@@ -32,7 +33,7 @@ function Header() {
       color="black"
       position="relative"
     >
-      {/* Logo PolkAttest - redirects to homepage */}
+      <Image src={icon} h={8} mr={2}></Image>
       <Link
         href="/"
         fontSize="2xl"
@@ -42,9 +43,7 @@ function Header() {
         Polkattest
       </Link>
 
-      {/* Navigation links */}
       <Flex gap="2rem" justify="center" flex="1" position="relative">
-        {/* Home link should not appear on the home page */}
         {currentPath !== "/" && (
           <Link
             href="/"
@@ -98,7 +97,6 @@ function Header() {
         </Link>
       </Flex>
 
-      {/* Display wallet connection status */}
       <Text
         position="absolute"
         right="230px"
@@ -124,9 +122,10 @@ function Header() {
           value={selectedAccount || ""}
           isDisabled={allAccounts.length === 0}
           _hover={{
-            color: "black",
             boxShadow: "0px 3px 5px rgba(0, 0, 0, 0.2)",
             transition: "0.4s",
+            backgroundColor: "brand.primary",
+            color: "white",
           }}
         >
           {allAccounts.length > 0 &&
@@ -143,7 +142,11 @@ function Header() {
             ))}
         </Select>
       ) : (
-        <Button width={buttonAndSelectWidth} onClick={handleConnectWallet}>
+        <Button
+          _hover={{ backgroundColor: "brand.primary", color: "white" }}
+          width={buttonAndSelectWidth}
+          onClick={handleConnectWallet}
+        >
           Connect Wallet
         </Button>
       )}

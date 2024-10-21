@@ -1,5 +1,6 @@
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Text, Image } from "@chakra-ui/react";
 import SecuredByPolkadot from "./secured";
+import icon from "../../assets/images/polkattestlogo.png";
 
 function Footer() {
   return (
@@ -13,23 +14,31 @@ function Footer() {
         textAlign="center"
         gap="2rem"
       >
+        <Image src={icon} h={8} mr={2}></Image>
         {/* Columna 1 */}
-        <Box flex="1">
+        <Box>
           <SecuredByPolkadot />
         </Box>
 
-
         {/* Columna 2 */}
-        <Box flex="1">
+        <Box flex="2">
           <Text fontSize="lg">
-            Made with ❤️ by <a href="https://psylabs.io" target="_blank" rel="noopener noreferrer" style={{ color: 'white', textDecoration: 'underline' }}>Psy Labs</a>
+            Made with ❤️ by{" "}
+            <a
+              href="https://psylabs.io"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "white", textDecoration: "underline" }}
+            >
+              Psy Labs
+            </a>
           </Text>
         </Box>
 
         {/* Columna 3 */}
-        <Box flex="1">
+        <Box>
           <Text fontSize="lg">
-          <a href="mailto:hello@psylabs.io">hello@psylabs.io</a>
+            <a href="mailto:hello@psylabs.io">hello@psylabs.io</a>
           </Text>
         </Box>
       </Flex>
