@@ -59,11 +59,12 @@ function CreateSchema() {
   };
 
   const handleFieldChange = (index: number, field: string, value: string) => {
-    if (validateInput(value)) {
-      const updatedFields = schemaFields.map((fieldItem, i) =>
-        i === index ? { ...fieldItem, [field]: value } : fieldItem
+    if (value === "" || validateInput(value)) {
+      setSchemaFields((prevFields) =>
+        prevFields.map((fieldItem, i) =>
+          i === index ? { ...fieldItem, [field]: value } : fieldItem
+        )
       );
-      setSchemaFields(updatedFields);
     }
   };
 
@@ -120,7 +121,7 @@ function CreateSchema() {
             alignItems="center"
             justifyContent="center"
             textAlign="center"
-            height="200px"
+            height="fit-content"
             width="400px"
             borderRadius="md"
             boxShadow="lg"
@@ -134,6 +135,7 @@ function CreateSchema() {
             </AlertDescription>
             <Button
               mt={4}
+              height={30}
               onClick={() => {
                 setErrorMessage(null);
                 setSuccessMessage(null);
@@ -203,6 +205,7 @@ function CreateSchema() {
                     _focusVisible={{ outline: "none" }}
                   />
                   <Select
+                    w={200}
                     placeholder="Select type"
                     value={field.dataType}
                     onChange={(e) =>
@@ -227,7 +230,7 @@ function CreateSchema() {
             ))}
           </VStack>
 
-          <HStack mt={4} spacing={4}>
+          <HStack mt={4} spacing={4} justifyContent={"center"}>
             <Button
               _hover={{ backgroundColor: "brand.primary", color: "white" }}
               _focusVisible={{ boxShadow: "none", outline: "none" }}
@@ -245,7 +248,6 @@ function CreateSchema() {
             </Button>
           </HStack>
 
-          {/* Button to submit the form */}
           <Button
             mt="2rem"
             bg="brand.primary"

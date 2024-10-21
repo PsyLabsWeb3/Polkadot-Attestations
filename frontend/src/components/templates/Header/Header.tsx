@@ -124,9 +124,10 @@ function Header() {
           value={selectedAccount || ""}
           isDisabled={allAccounts.length === 0}
           _hover={{
-            color: "black",
             boxShadow: "0px 3px 5px rgba(0, 0, 0, 0.2)",
             transition: "0.4s",
+            backgroundColor: "brand.primary",
+            color: "white",
           }}
         >
           {allAccounts.length > 0 &&
@@ -143,7 +144,11 @@ function Header() {
             ))}
         </Select>
       ) : (
-        <Button width={buttonAndSelectWidth} onClick={handleConnectWallet}>
+        <Button
+          _hover={{ backgroundColor: "brand.primary", color: "white" }}
+          width={buttonAndSelectWidth}
+          onClick={handleConnectWallet}
+        >
           Connect Wallet
         </Button>
       )}
