@@ -11,10 +11,6 @@ pub use crate::schema::SIZE_STRINGS;
 // Re-export pallet items so that they can be accessed from the crate namespace.
 pub use pallet::*;
 
-// Ensure the timestamp pallet is included in your runtime.
-// use frame_system::ensure_signed;
-// use pallet_timestamp::Pallet as TimestampPallet;
-
 // FRAME pallets require their own "mock runtimes" to be able to run unit tests. This module
 // contains a mock runtime specific for testing this pallet's functionality.
 #[cfg(test)]
