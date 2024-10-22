@@ -96,7 +96,11 @@ function Attest() {
     try {
       setUploading(true);
 
-      const cid = await pinataManager.pinFile(file, { name: file.name });
+      const cid = await pinataManager.pinFile(file, {
+        name: file.name,
+        type: file.type,
+        size: file.size,
+      });
 
       setFields((prev) => ({ ...prev, [fieldName]: cid }));
 
@@ -264,7 +268,7 @@ function Attest() {
                       {field.dataType === "string" ? (
                         <Input
                           type="text"
-                          placeholder={`Enter ${field.name}`}
+                          placeholder={`Enter ${field.dataType}`}
                           value={fields[field.name] as string}
                           onChange={(e) => handleChange(e, field.name)}
                           borderColor="gray.500"
@@ -276,7 +280,7 @@ function Attest() {
                       ) : field.dataType === "number" ? (
                         <Input
                           type="number"
-                          placeholder={`Enter ${field.name}`}
+                          placeholder={`Enter ${field.dataType}`}
                           value={fields[field.name] as number}
                           onChange={(e) => handleChange(e, field.name)}
                           borderColor="gray.500"
@@ -299,8 +303,7 @@ function Attest() {
                           <option value="true">True</option>
                           <option value="false">False</option>
                         </Select>
-                      ) : field.dataType === "address" ||
-                        field.dataType === "cid" ? (
+                      ) : field.dataType === "cid" ? (
                         <>
                           <Input
                             type="text"
@@ -324,7 +327,7 @@ function Attest() {
                             onClick={() =>
                               document
 
-                                .getElementById(`${field.name}-file-input`)
+                                .getElementById(`${field.dataType}-file-input`)
 
                                 ?.click()
                             }
@@ -334,7 +337,7 @@ function Attest() {
                           </Button>
 
                           <Input
-                            id={`${field.name}-file-input`}
+                            id={`${field.dataType}-file-input`}
                             type="file"
                             hidden
                             onChange={(e) => {
@@ -351,7 +354,19 @@ function Attest() {
                       ) : field.dataType === "bytes32" ? (
                         <Input
                           type="text"
-                          placeholder={`Enter ${field.name} (32-byte string)`}
+                          placeholder={`Enter ${field.dataType} (32-byte string)`}
+                          value={fields[field.name] as string}
+                          onChange={(e) => handleChange(e, field.name)}
+                          borderColor="gray.500"
+                          bg="white"
+                          _placeholder={{ color: "gray.500" }}
+                          _focus={{ borderColor: "brand.primary" }}
+                          _focusVisible={{ outline: "none" }}
+                        />
+                      ) : field.dataType === "address" ? (
+                        <Input
+                          type="text"
+                          placeholder={`Enter ${field.dataType}`}
                           value={fields[field.name] as string}
                           onChange={(e) => handleChange(e, field.name)}
                           borderColor="gray.500"

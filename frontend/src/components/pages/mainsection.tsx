@@ -22,7 +22,7 @@ function MainSection() {
       position="relative"
     >
       <Box textAlign="center" zIndex="1">
-        <Box display={"flex"} flexDir={"row"}>
+        <Box display={"flex"} flexDir={"row"} justifyContent={"center"}>
           <Image src={icon} h={20} mr={2}></Image>
           <Heading fontSize="4rem" color="white">
             Polkattest

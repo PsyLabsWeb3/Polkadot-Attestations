@@ -161,7 +161,7 @@ function UserDashboard() {
                       </Tr>
                     </Thead>
                     <Tbody>
-                      {!hasFetchedSchemas ? (
+                      {!hasFetchedSchemas && schemas.length ? (
                         <Tr>
                           <Td colSpan={4} textAlign="center">
                             <Spinner size="xl" color="pink.500" />
