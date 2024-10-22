@@ -1,37 +1,34 @@
 import { extendTheme } from "@chakra-ui/react";
 
-// Colores del Brandbook, con ajustes para mayor contraste
 const colors = {
   brand: {
-    primary: "#FF2670",   // Rosa para botones primarios, enlaces, etc.
-    secondary: "#7204FF", // Morado para botones secundarios y acentos.
-    background: "#E1E3F1", // Fondo claro para la página o tarjetas.
-    white: "#FFFFFF",     // Textos sobre fondos oscuros.
-    black: "#000000",     // Color negro para títulos y textos importantes.
-    grayDark: "#333333",  // Un gris oscuro para fondos más oscuros.
-    grayLight: "#F7F7F7", // Un gris claro para cajas o secciones.
-    grayMedium: "#666666", // Un gris intermedio para texto y bordes.
+    primary: "#FF2670",
+    secondary: "#7204FF",
+    background: "#E1E3F1",
+    white: "#FFFFFF",
+    black: "#000000",
+    grayDark: "#333333",
+    grayLight: "#F7F7F7",
+    grayMedium: "#666666",
   },
 };
 
-// Tipografía
 const fonts = {
-  heading: `'Poppins', sans-serif`,  // Para H1, H2, H3
-  body: `'Inter', sans-serif`,       // Para textos y subtítulos
+  heading: `'Poppins', sans-serif`,
+  body: `'Inter', sans-serif`,
 };
 
-// Estilos globales y componentes personalizados
 const styles = {
   global: {
     body: {
-      bg: "brand.background",  // Fondo general claro
-      color: "brand.black",    // Texto negro por defecto para contraste
+      bg: "brand.background",
+      color: "brand.black",
     },
     a: {
-      color: "brand.primary",  // Enlaces en rosa
+      color: "brand.primary",
       _hover: {
-        color: "brand.secondary",  // Enlaces en hover morado
-        textDecoration: "underline", // Subrayado en hover para mejor accesibilidad
+        color: "brand.secondary",
+        textDecoration: "underline",
       },
     },
   },
@@ -42,7 +39,7 @@ const components = {
     baseStyle: {
       fontWeight: "bold",
       borderRadius: "8px",
-      border: "none",  // Eliminamos el trazo en todos los botones
+      border: "none",
     },
     sizes: {
       lg: {
@@ -63,35 +60,34 @@ const components = {
     },
     variants: {
       primary: {
-        bg: "brand.primary",   // Rosa como color base
-        color: "brand.white",  // Texto blanco
+        bg: "brand.primary",
+        color: "brand.white",
         _hover: {
-          bg: "brand.secondary",  // Cambia a morado en hover
+          bg: "brand.secondary",
         },
         _focus: {
-          boxShadow: "none",    // Sin sombra en foco
+          boxShadow: "none",
         },
       },
       secondary: {
-        bg: "brand.secondary",  // Morado como color base
-        color: "brand.white",   // Texto blanco
+        bg: "brand.secondary",
+        color: "brand.white",
         _hover: {
-          bg: "brand.primary",  // Cambia a rosa en hover
+          bg: "brand.primary",
         },
         _focus: {
-          boxShadow: "none",    // Sin sombra en foco
+          boxShadow: "none",
         },
       },
       outline: {
-        border: "none",         // Eliminamos el borde de la variante outline
-        color: "brand.primary", // Texto rosa
+        border: "none",
+        color: "brand.primary",
         _hover: {
-          bg: "brand.grayLight", // Fondo gris claro en hover
+          bg: "brand.grayLight",
         },
       },
     },
   },
-  // Otros componentes...
 };
 
 const theme = extendTheme({

@@ -10,17 +10,15 @@ function Footer() {
         mx="auto"
         justifyContent="space-between"
         alignItems="center"
-        flexDirection={["column", "column", "row"]} // Columna en móviles, fila en pantallas grandes
+        flexDirection={["column", "column", "row"]}
         textAlign="center"
         gap="2rem"
       >
         <Image src={icon} h={8} mr={2}></Image>
-        {/* Columna 1 */}
         <Box>
           <SecuredByPolkadot />
         </Box>
 
-        {/* Columna 2 */}
         <Box flex="2">
           <Text fontSize="lg">
             Made with ❤️ by{" "}
@@ -35,7 +33,6 @@ function Footer() {
           </Text>
         </Box>
 
-        {/* Columna 3 */}
         <Box>
           <Text fontSize="lg">
             <a href="mailto:hello@psylabs.io">hello@psylabs.io</a>

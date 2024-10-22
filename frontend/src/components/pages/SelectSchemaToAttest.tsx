@@ -61,7 +61,6 @@ function SelectSchemaToAttest() {
       bg="brand.background"
       color="brand.black"
     >
-      {/* Main content */}
       <Flex
         justify="center"
         alignItems="center"
@@ -82,12 +81,10 @@ function SelectSchemaToAttest() {
             Choose your schema to attest
           </Heading>
 
-          {/* Display loading spinner while schemas are being fetched */}
           {isLoading ? (
             <Spinner size="xl" color="pink.500" />
           ) : (
             <VStack spacing={4} w="100%">
-              {/* Display the list of available schemas */}
               {schemasList?.length > 0 ? (
                 schemasList?.map((schema: SchemaData) => (
                   <Box
@@ -107,16 +104,14 @@ function SelectSchemaToAttest() {
                   </Box>
                 ))
               ) : (
-                <Text>No schemas found</Text> // Message if no schemas are found
+                <Text>No schemas found</Text>
               )}
             </VStack>
           )}
           <Text mb={2} fontWeight="bold" color="gray.700" marginTop={12}>
             Search for an existing Schema to Attest
           </Text>
-          {/* Component for searching schemas by ID */}
           <SearchById searchType={SearchType.SCHEMA} />
-          {/* Button to navigate to the page for creating a new schema */}
           <Button
             mt={8}
             bg="brand.primary"

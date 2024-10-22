@@ -5,7 +5,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import theme from "./theme/theme";
 import Layout from "./components/templates/Layout";
 
-// Importación de páginas
 import Home from "./components/pages/Home";
 import SelectSchemaToAttest from "./components/pages/SelectSchemaToAttest";
 import CreateSchema from "./components/pages/CreateSchema";

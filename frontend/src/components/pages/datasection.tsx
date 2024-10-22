@@ -1,10 +1,9 @@
 import { Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom"; // Hook for navigation between routes
-import { keyframes } from "@emotion/react"; // Keyframes utility for animation
+import { useNavigate } from "react-router-dom";
+import { keyframes } from "@emotion/react";
 import { useEffect, useState } from "react";
 import { AttestationData, useApi } from "../contexts/ApiContext";
 
-// Gradient animation configuration
 const gradientAnimation = keyframes`
   0% {
     background-position: 0% 50%;
@@ -18,7 +17,7 @@ const gradientAnimation = keyframes`
 `;
 
 function DataSection() {
-  const navigate = useNavigate(); // Used to programmatically navigate between pages
+  const navigate = useNavigate();
   const { getAll, api } = useApi();
   const [attestations, setAttestations] = useState<AttestationData[]>([]);
   const [hasFetchedAttestations, setHasFetchedAttestations] = useState(false);
@@ -55,7 +54,7 @@ function DataSection() {
       h="100vh"
       bgGradient="linear(to-r, #000000, #7204ff)"
       bgSize="200% 200%"
-      animation={`${gradientAnimation} 15s ease infinite`} // Infinite gradient animation for background
+      animation={`${gradientAnimation} 15s ease infinite`}
       flexDirection="column"
       alignItems="center"
       justifyContent="center"

@@ -12,22 +12,19 @@ function HowItWorks() {
       bgGradient="linear(135deg, #FFFFFF, #FFD4E2)"
       color="#000"
     >
-      {/* Contenedor principal con dos columnas */}
       <Flex
         w="100%"
         maxW="1200px"
         justifyContent="space-between"
         alignItems="center"
-        gap={10} // Añade espacio entre las columnas
+        gap={10}
       >
-        {/* Columna izquierda con la imagen */}
         <Flex
           flex="1"
           direction="column"
           alignItems="center"
           textAlign="center"
         >
-          {/* Espacio para la imagen */}
           <Box
             h="400px"
             w="300px"
@@ -39,19 +36,16 @@ function HowItWorks() {
           </Box>
         </Flex>
 
-        {/* Columna derecha con los textos explicativos */}
         <Flex
           flex="1"
           direction="column"
           justifyContent="center"
           textAlign="left"
         >
-          {/* Título "How it Works" */}
           <Heading as="h3" mb={10} textAlign="left">
             How it Works
           </Heading>
 
-          {/* Paso 1: Overview */}
           <Flex mb={8} direction="column">
             <Text fontSize="xl" fontWeight="bold" mb={2}>
               Polkattest: The Ledger for Verifiable Off-Chain Events
@@ -64,7 +58,6 @@ function HowItWorks() {
             </Text>
           </Flex>
 
-          {/* Paso 2: Create a Schema */}
           <Flex mb={8} direction="column">
             <Text fontSize="xl" fontWeight="bold" mb={2}>
               1. Create a Schema
@@ -78,7 +71,6 @@ function HowItWorks() {
             </Text>
           </Flex>
 
-          {/* Paso 3: Make an Attestation */}
           <Flex mb={8} direction="column">
             <Text fontSize="xl" fontWeight="bold" mb={2}>
               2. Make an Attestation
@@ -92,7 +84,6 @@ function HowItWorks() {
             </Text>
           </Flex>
 
-          {/* Paso 4: Retrieve and Verify */}
           <Flex direction="column">
             <Text fontSize="xl" fontWeight="bold" mb={2}>
               3. Retrieve and Verify
