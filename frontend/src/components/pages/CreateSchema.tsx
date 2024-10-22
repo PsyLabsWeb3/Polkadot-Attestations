@@ -91,7 +91,9 @@ function CreateSchema() {
       await sendTransaction(selectedAccount, api.tx.attestations.insertSchema, [
         schemaData,
       ]);
-      setSuccessMessage("Transaction successful!");
+      setSuccessMessage(
+        "Transaction is being processed and has been included in a block!"
+      );
     } catch (error) {
       console.error("Error inserting schema:", error);
       setErrorMessage(`Failed to insert schema: ${error}`);

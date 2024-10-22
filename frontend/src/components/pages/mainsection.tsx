@@ -1,7 +1,7 @@
-import { Box, Flex, Heading, keyframes } from "@chakra-ui/react";
+import { Box, Flex, Heading, keyframes, Image } from "@chakra-ui/react";
 import Spline from "@splinetool/react-spline";
+import icon from "../../assets/images/polkattest_icon_graywhite.png";
 
-// Definir los keyframes de la animación
 const gradientAnimation = keyframes`
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
@@ -13,30 +13,26 @@ function MainSection() {
     <Flex
       flexDirection="column"
       w="100%"
-      h="calc(100vh - 4rem)" // Ajusta según la altura del Header
-      bgGradient="linear(to-r, #7204ff, #FF2670)" // El gradiente inicial
-      backgroundSize="200% 200%" // Para permitir el movimiento del gradiente
-      animation={`${gradientAnimation} 10s ease infinite`} // Aplicar la animación
+      h="calc(100vh - 4rem)"
+      bgGradient="linear(to-r, #7204ff, #FF2670)"
+      backgroundSize="200% 200%"
+      animation={`${gradientAnimation} 10s ease infinite`}
       justifyContent="center"
       alignItems="center"
       position="relative"
     >
       <Box textAlign="center" zIndex="1">
-        <Heading fontSize="4rem" color="white">
-          Polkattest Chain
-        </Heading>
+        <Box display={"flex"} flexDir={"row"}>
+          <Image src={icon} h={20} mr={2}></Image>
+          <Heading fontSize="4rem" color="white">
+            Polkattest Chain
+          </Heading>
+        </Box>
         <Heading as="h2" fontSize="2rem" color="white" mt="1rem">
-          Substrate-based Attestation Blockchain
+          Attestation hub for Polkadot Ecosystem
         </Heading>
       </Box>
-      <Flex
-        position="absolute" // Position the Flex containing Spline absolutely
-        top="0"
-        left="0"
-        w="100%"
-        h="100%"
-        zIndex="0"
-      >
+      <Flex position="absolute" top="0" left="0" w="100%" h="100%" zIndex="0">
         <Spline scene="https://prod.spline.design/JXA2-y0Og7K6LTUi/scene.splinecode" />
       </Flex>
     </Flex>

@@ -104,6 +104,7 @@ export const ApiProvider: React.FC<{ children: React.ReactNode }> = ({
             console.log(
               `Transaction included at blockHash ${status.asInBlock}`
             );
+            setTransactionLoading(false);
             if (dispatchError) {
               if (dispatchError.isModule) {
                 const decoded = api?.registry.findMetaError(
@@ -120,7 +121,6 @@ export const ApiProvider: React.FC<{ children: React.ReactNode }> = ({
               `Transaction finalized at blockHash ${status.asFinalized}`
             );
             unsub();
-            setTransactionLoading(false);
           }
         }
       );

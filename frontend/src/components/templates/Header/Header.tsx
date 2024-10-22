@@ -1,6 +1,7 @@
-import { Link, Flex, Button, Select, Text } from "@chakra-ui/react";
+import { Link, Flex, Button, Select, Text, Image } from "@chakra-ui/react";
 import { useWallet } from "../../contexts/AccountContext";
 import { useLocation } from "react-router-dom";
+import icon from "../../../assets/images/polkattestlogo.png";
 
 interface Account {
   address: string;
@@ -32,7 +33,7 @@ function Header() {
       color="black"
       position="relative"
     >
-      {/* Logo PolkAttest - redirects to homepage */}
+      <Image src={icon} h={8} mr={2}></Image>
       <Link
         href="/"
         fontSize="2xl"
@@ -42,9 +43,7 @@ function Header() {
         Polkattest
       </Link>
 
-      {/* Navigation links */}
       <Flex gap="2rem" justify="center" flex="1" position="relative">
-        {/* Home link should not appear on the home page */}
         {currentPath !== "/" && (
           <Link
             href="/"
@@ -98,7 +97,6 @@ function Header() {
         </Link>
       </Flex>
 
-      {/* Display wallet connection status */}
       <Text
         position="absolute"
         right="230px"

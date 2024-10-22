@@ -147,7 +147,9 @@ function Attest() {
         api.tx.attestations.insertAttestation,
         [attestation]
       );
-      setSuccessMessage("Transaction successful!");
+      setSuccessMessage(
+        "Transaction is being processed and has been included in a block!"
+      );
 
       setUploadedFileCIDs([]);
     } catch (error) {
@@ -196,7 +198,7 @@ function Attest() {
               {errorMessage ? "Error" : "Success"}
             </AlertTitle>
             <AlertDescription maxWidth="sm">
-              {errorMessage || "Attestation submitted successfully!"}
+              {errorMessage || successMessage}
             </AlertDescription>
             <Button
               mt={4}
@@ -239,9 +241,7 @@ function Attest() {
                 in the necessary fields below.
               </Text>
 
-              {/* Generate the form dynamically based on schema fields */}
               <form>
-                {/* Subject Field */}
                 <FormControl mb={4} isRequired>
                   <FormLabel>Subject</FormLabel>
                   <Input
@@ -261,7 +261,6 @@ function Attest() {
                   field.name && field.dataType ? (
                     <FormControl key={field.name} mb={4} isRequired>
                       <FormLabel>{field.name}</FormLabel>
-                      {/* Render Input or Select based on field type */}
                       {field.dataType === "string" ? (
                         <Input
                           type="text"
@@ -365,8 +364,6 @@ function Attest() {
                     </FormControl>
                   ) : null
                 )}
-
-                {/* Button to submit the form */}
                 <Button
                   mt="2rem"
                   bg="brand.primary"
