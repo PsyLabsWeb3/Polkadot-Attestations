@@ -22,20 +22,38 @@ function Pallet() {
               ensuring the integrity and authenticity of data across
               decentralized networks.
             </Text>
-            <Button
-              bg="brand.primary"
-              color="white"
-              _hover={{ bg: "brand.secondary" }}
-              border="none"
-              onClick={() =>
-                window.open(
-                  "https://github.com/PsyLabsWeb3/Polkadot-Attestations/tree/main/pallet/pallet-attestations",
-                  "_blank"
-                )
-              }
-            >
-              GitHub Repo
-            </Button>
+            <Flex justifyContent={"space-evenly"}>
+              <Button
+                w={60}
+                bg="brand.primary"
+                color="white"
+                _hover={{ bg: "brand.secondary" }}
+                border="none"
+                onClick={() =>
+                  window.open(
+                    "https://github.com/PsyLabsWeb3/Polkadot-Attestations/tree/main/polkattest-node/pallets/pallet-attestations",
+                    "_blank"
+                  )
+                }
+              >
+                GitHub
+              </Button>
+              <Button
+                w={60}
+                bg="brand.primary"
+                color="white"
+                _hover={{ bg: "brand.secondary" }}
+                border="none"
+                onClick={() =>
+                  window.open(
+                    "https://lucianog2000.github.io/docs-polkattest-node/doc/pallet_attestations/",
+                    "_blank"
+                  )
+                }
+              >
+                Docs
+              </Button>
+            </Flex>
           </Box>
         </Box>
 

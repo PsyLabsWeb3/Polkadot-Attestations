@@ -96,20 +96,22 @@ function DataSection() {
         flexWrap="wrap"
       >
         <Button
+          w={60}
           bg="pink.500"
           color="white"
           size="lg"
-          _hover={{ bg: "pink.600" }}
+          _hover={{ bg: "brand.secondary" }}
           onClick={() => navigate("/create-schema")}
         >
           Create New Schema
         </Button>
 
         <Button
+          w={60}
           bg="pink.500"
           color="white"
           size="lg"
-          _hover={{ bg: "pink.600" }}
+          _hover={{ bg: "brand.secondary" }}
           onClick={() => navigate("/attest")}
         >
           Make Attestation

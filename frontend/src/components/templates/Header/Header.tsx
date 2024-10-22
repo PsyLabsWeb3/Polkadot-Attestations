@@ -124,7 +124,7 @@ function Header() {
           _hover={{
             boxShadow: "0px 3px 5px rgba(0, 0, 0, 0.2)",
             transition: "0.4s",
-            backgroundColor: "brand.primary",
+            backgroundColor: "brand.secondary",
             color: "white",
           }}
         >
