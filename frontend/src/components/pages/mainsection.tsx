@@ -25,7 +25,7 @@ function MainSection() {
         <Box display={"flex"} flexDir={"row"}>
           <Image src={icon} h={20} mr={2}></Image>
           <Heading fontSize="4rem" color="white">
-            Polkattest Chain
+            Polkattest
           </Heading>
         </Box>
         <Heading as="h2" fontSize="2rem" color="white" mt="1rem">
