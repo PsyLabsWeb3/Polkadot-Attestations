@@ -1,6 +1,7 @@
-import { Link, Flex, Button, Select, Text } from "@chakra-ui/react";
+import { Link, Flex, Button, Select, Text, Image } from "@chakra-ui/react";
 import { useWallet } from "../../contexts/AccountContext";
 import { useLocation } from "react-router-dom";
+import icon from "../../../assets/images/polkattestlogo.png";
 
 interface Account {
   address: string;
@@ -10,6 +11,7 @@ function Header() {
   const {
     allAccounts,
     selectedAccount,
+    isWalletConnected,
     handleConnectWallet,
     handleSelectAccount,
     formatAccount,
@@ -17,7 +19,7 @@ function Header() {
 
   const location = useLocation();
   const currentPath = location.pathname;
-  const buttonAndSelectWidth = "11rem";
+  const buttonAndSelectWidth = "12rem";
 
   return (
     <Flex
@@ -31,19 +33,17 @@ function Header() {
       color="black"
       position="relative"
     >
-      {/* Logo PolkAttest - redirects to homepage */}
+      <Image src={icon} h={8} mr={2}></Image>
       <Link
         href="/"
         fontSize="2xl"
         fontWeight="bold"
         _hover={{ textDecoration: "none" }}
       >
-        PolkAttest
+        Polkattest
       </Link>
 
-      {/* Navigation links */}
       <Flex gap="2rem" justify="center" flex="1" position="relative">
-        {/* Home link should not appear on the home page */}
         {currentPath !== "/" && (
           <Link
             href="/"
@@ -57,7 +57,7 @@ function Header() {
         )}
 
         <Link
-          href="/userdashboard"
+          href="/user-dashboard"
           fontSize="lg"
           fontWeight="medium"
           color="gray.500"
@@ -97,7 +97,6 @@ function Header() {
         </Link>
       </Flex>
 
-      {/* Display wallet connection status */}
       <Text
         position="absolute"
         right="230px"
@@ -105,49 +104,52 @@ function Header() {
         transform="translateY(-50%)"
         color="gray.700"
       >
-        {allAccounts.length > 0 && !selectedAccount ? (
-          <strong>Please select your wallet account.</strong>
-        ) : (
-          ""
-        )}
+        {isWalletConnected && !selectedAccount && allAccounts.length > 0 ? (
+          <strong>Please select your account.</strong>
+        ) : null}
       </Text>
 
-      {/* Show "Connect Wallet" button if no accounts are connected */}
-      {allAccounts.length === 0 ? (
-        <Button width={buttonAndSelectWidth} onClick={handleConnectWallet}>
-          Connect Wallet
-        </Button>
-      ) : null}
-
-      {/* Dropdown for selecting wallet account */}
-      {allAccounts.length > 0 ? (
+      {isWalletConnected && allAccounts.length ? (
         <Select
           onChange={handleSelectAccount}
           bgColor="gray.300"
-          maxWidth="11rem"
-          placeholder="Select Account"
+          maxWidth={buttonAndSelectWidth}
+          placeholder={
+            allAccounts.length > 0 ? "Select Account" : "No accounts"
+          }
           size="lg"
           variant="filled"
           value={selectedAccount || ""}
+          isDisabled={allAccounts.length === 0}
           _hover={{
-            color: "black",
             boxShadow: "0px 3px 5px rgba(0, 0, 0, 0.2)",
             transition: "0.4s",
+            backgroundColor: "brand.primary",
+            color: "white",
           }}
         >
-          {allAccounts.map((account: Account, index: number) => (
-            <option
-              key={index}
-              value={account.address}
-              style={{
-                color: "black",
-              }}
-            >
-              {formatAccount(account.address)}
-            </option>
-          ))}
+          {allAccounts.length > 0 &&
+            allAccounts.map((account: Account, index: number) => (
+              <option
+                key={index}
+                value={account.address}
+                style={{
+                  color: "black",
+                }}
+              >
+                {formatAccount(account.address)}
+              </option>
+            ))}
         </Select>
-      ) : null}
+      ) : (
+        <Button
+          _hover={{ backgroundColor: "brand.primary", color: "white" }}
+          width={buttonAndSelectWidth}
+          onClick={handleConnectWallet}
+        >
+          Connect Wallet
+        </Button>
+      )}
     </Flex>
   );
 }
