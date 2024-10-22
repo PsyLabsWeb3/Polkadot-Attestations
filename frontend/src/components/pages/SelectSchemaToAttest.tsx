@@ -81,11 +81,11 @@ function SelectSchemaToAttest() {
             Choose your schema to attest
           </Heading>
 
-          {isLoading ? (
+          {api && isLoading ? (
             <Spinner size="xl" color="pink.500" />
           ) : (
             <VStack spacing={4} w="100%">
-              {schemasList?.length > 0 ? (
+              {api && schemasList?.length > 0 ? (
                 schemasList?.map((schema: SchemaData) => (
                   <Box
                     key={schema.id}
@@ -104,7 +104,7 @@ function SelectSchemaToAttest() {
                   </Box>
                 ))
               ) : (
-                <Text>No schemas found</Text>
+                <Text>No schemas found.</Text>
               )}
             </VStack>
           )}

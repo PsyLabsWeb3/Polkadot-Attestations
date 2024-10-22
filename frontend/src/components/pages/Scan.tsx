@@ -142,13 +142,13 @@ function Scan() {
                       </Tr>
                     </Thead>
                     <Tbody>
-                      {!hasFetchedSchemas ? (
+                      {api && !hasFetchedSchemas ? (
                         <Tr>
                           <Td colSpan={4} textAlign="center">
                             <Spinner size="xl" color="pink.500" />
                           </Td>
                         </Tr>
-                      ) : sortedSchemas.length > 0 ? (
+                      ) : api && sortedSchemas.length > 0 ? (
                         sortedSchemas.map((schema) => (
                           <Tr key={schema.id}>
                             <Td textAlign="center">{schema.id}</Td>
@@ -219,13 +219,13 @@ function Scan() {
                       </Tr>
                     </Thead>
                     <Tbody>
-                      {!hasFetchedAttestations ? (
+                      {api && !hasFetchedAttestations ? (
                         <Tr>
                           <Td colSpan={5} textAlign="center">
                             <Spinner size="xl" color="pink.500" />
                           </Td>
                         </Tr>
-                      ) : sortedAttestations.length > 0 ? (
+                      ) : api && sortedAttestations.length > 0 ? (
                         sortedAttestations.map((attestation) => (
                           <Tr key={attestation.id}>
                             <Td textAlign="center">{attestation.id}</Td>

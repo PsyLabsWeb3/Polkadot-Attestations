@@ -161,13 +161,13 @@ function UserDashboard() {
                       </Tr>
                     </Thead>
                     <Tbody>
-                      {!hasFetchedSchemas && schemas.length ? (
+                      {api && !hasFetchedSchemas ? (
                         <Tr>
                           <Td colSpan={4} textAlign="center">
                             <Spinner size="xl" color="pink.500" />
                           </Td>
                         </Tr>
-                      ) : sortedSchemas.length > 0 ? (
+                      ) : api && sortedSchemas.length > 0 ? (
                         sortedSchemas.map((schema) => (
                           <Tr key={schema.id}>
                             <Td textAlign="center">{schema.id}</Td>
