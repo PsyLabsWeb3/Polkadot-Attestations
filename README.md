@@ -137,7 +137,7 @@ These features enable advanced use cases in areas like **governance, supply chai
 
 ### _Rafa_
 
-- Background in software engineering with 7 years as a backend specialist with blockchain experience.
+- Background in software engineering with 6+ years as a backend specialist with blockchain experience.
 - Skilled in Service Oriented Architecture and Rust development.
 - [GitHub](https://github.com/RafaelAcuna) | [Email](mailto:rafa.acuna.96@gmail.com) | [Linkedin](https://www.linkedin.com/in/rafael-acuna)
 
@@ -157,6 +157,6 @@ These features enable advanced use cases in areas like **governance, supply chai
 
 ## Additional Resources
 
-- **[Pitch Deck](https://drive.google.com/...)**
+- **[Pitch Deck](https://www.figma.com/proto/fGFOIj2dArXnPm60Zfmum1/Polkattest?node-id=394-33&node-type=canvas&t=thGtlKG9d5kYN4HO-1&scaling=contain&content-scaling=fixed&page-id=394%3A31&starting-point-node-id=394%3A33&share=1)**
 - **[Demo Video](https://drive.google.com/...)**
 - **[Polkattest Node Docs](https://lucianog2000.github.io/docs-polkattest-node/doc/pallet_attestations/)**
