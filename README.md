@@ -124,9 +124,9 @@ These features enable advanced use cases in areas like **governance, supply chai
 
 ### _Robin_
 
-- 9+ years in software development and project management.
-- Polkadot senior ambassador and Substrate evangelist.
-- [GitHub]() | [Email](mailto:) | [Linkedin]()
+- PM and UX/UI.
+- Polkadot Evangelist.
+- [GitHub](https://github.com/robinhodl69) | [Email](mailto:jaramillo.jesusj@gmail.com) | [Linkedin](https://www.linkedin.com/in/jaramillojesuslini/)
 
 ### _Iván_
 
@@ -157,6 +157,5 @@ These features enable advanced use cases in areas like **governance, supply chai
 
 ## Additional Resources
 
-- **[Pitch Deck](https://www.figma.com/proto/fGFOIj2dArXnPm60Zfmum1/Polkattest?node-id=394-33&node-type=canvas&t=thGtlKG9d5kYN4HO-1&scaling=contain&content-scaling=fixed&page-id=394%3A31&starting-point-node-id=394%3A33&share=1)**
-- **[Demo Video](https://drive.google.com/...)**
+- **[Pitch Deck + Demo Video](https://www.figma.com/proto/fGFOIj2dArXnPm60Zfmum1/Polkattest?node-id=394-33&node-type=canvas&t=thGtlKG9d5kYN4HO-1&scaling=contain&content-scaling=fixed&page-id=394%3A31&starting-point-node-id=394%3A33&share=1)**
 - **[Polkattest Node Docs](https://lucianog2000.github.io/docs-polkattest-node/doc/pallet_attestations/)**
