@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="image.png" width="120px" alt="Polkattest">
+  <img src="https://chocolate-liquid-ferret-925.mypinata.cloud/ipfs/Qmc1shPtBLALzcLuvgNHNox68izCWSPR3MU9GE7zf4rXgU" width="120px" alt="Polkattest">
 </div>
 
 # Polkattest
@@ -62,7 +62,7 @@ A **schema** is a predefined structure that defines the format and type of data 
 Schemas also support **ink! contracts**, enabling complex logic attached to attestations, which unlocks new possibilities in areas such as **decentralized identity** or **automated token minting**.
 
 <div align="center">
-  <img src="image-1.png" width="500px" alt="Polkattest">
+  <img src="https://chocolate-liquid-ferret-925.mypinata.cloud/ipfs/QmbK5kfk8UKJaLCPKqxsPQ3X2j9LodcYxD9eNSEAQxDnAh" width="500px" alt="Polkattest">
 </div>
 
 ## What Are Attestations?
@@ -71,7 +71,7 @@ Schemas also support **ink! contracts**, enabling complex logic attached to atte
 Attestations are the building blocks for **trustless and transparent systems**, eliminating intermediaries and reducing the chance of fraud.
 
 <div align="center">
-  <img src="image-2.png" width="500px" alt="Polkattest">
+  <img src="https://chocolate-liquid-ferret-925.mypinata.cloud/ipfs/Qma38SXstKFFWJFXcScJPx5brjh6WmFiaCrC37JXkZGg4k" width="500px" alt="Polkattest">
 </div>
 ---
 
@@ -86,14 +86,14 @@ Attestations are the building blocks for **trustless and transparent systems**, 
 These features enable advanced use cases in areas like **governance, supply chain tracking, and decentralized identity systems**.
 
 <div align="center">
-  <img src="image-3.png" width="500px" alt="Polkattest">
+  <img src="https://chocolate-liquid-ferret-925.mypinata.cloud/ipfs/QmPp5uvKTD1hLQGcB2wYVjV2uiu4Kuj1uXs94wr2LgVctU" width="500px" alt="Polkattest">
 </div>
 
 ---
 
 ## Technology Architecture
 
-![alt text](image-4.png)
+![alt text](https://chocolate-liquid-ferret-925.mypinata.cloud/ipfs/QmT5tmWEdwJEMmezMQQSqPYMfnFJmuyDDvnqs2kRriDtCx)
 
 ---
 
