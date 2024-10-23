@@ -67,8 +67,8 @@ Schemas also support **ink! contracts**, enabling complex logic attached to atte
 
 ## What Are Attestations?
 
-**Attestations** are cryptographically signed proofs that verify the authenticity of data or events. They confirm specific actions or claims, ensuring **tamper-proof** data stored immutably on-chain.  
-Attestations are the building blocks for **trustless and transparent systems**, eliminating intermediaries and reducing the chance of fraud.
+**Attestations** are cryptographically signed records that confirm a specific action or claim was made, ensuring that the data is tamper-proof and stored immutably on-chain. 
+While Polkattest provides the infrastructure to record these attestations on the blockchain securely, it does not verify the authenticity of the data or events themselves. Instead, we serve as a tool for creating immutable, transparent records, enabling users to store and access their own proofs on a decentralized system without intermediaries.
 
 <div align="center">
   <img src="https://chocolate-liquid-ferret-925.mypinata.cloud/ipfs/Qma38SXstKFFWJFXcScJPx5brjh6WmFiaCrC37JXkZGg4k" width="500px" alt="Polkattest">
