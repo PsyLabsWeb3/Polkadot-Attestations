@@ -97,7 +97,7 @@ These features enable advanced use cases in areas like **governance, supply chai
 
 ---
 
-## Deliverables
+## Progress
 
 **Blockchain**
 
